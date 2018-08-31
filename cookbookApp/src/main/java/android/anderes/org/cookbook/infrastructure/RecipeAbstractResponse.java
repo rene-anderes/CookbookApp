@@ -1,20 +1,18 @@
 package android.anderes.org.cookbook.infrastructure;
 
-import android.anderes.org.cookbook.model.RecipeAbstract;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.anderes.org.cookbook.infrastructure.RemoteDataRecipeAbstract.Status.NONE;
+import static android.anderes.org.cookbook.infrastructure.RecipeAbstractResponse.Status.NONE;
 
-public class RemoteDataRecipeAbstract {
+public class RecipeAbstractResponse {
 
     public enum Status { OK, ERROR, NONE };
 
     private List<RecipeAbstract> recipes = new ArrayList<>(0);
     private Status status = NONE;
 
-    public RemoteDataRecipeAbstract setData(final List<RecipeAbstract> recipes) {
+    public RecipeAbstractResponse setData(final List<RecipeAbstract> recipes) {
         this.recipes = recipes;
         return this;
     }
@@ -27,7 +25,7 @@ public class RemoteDataRecipeAbstract {
         return status;
     }
 
-    public RemoteDataRecipeAbstract setStatus(Status status) {
+    public RecipeAbstractResponse setStatus(Status status) {
         this.status = status;
         return this;
     }

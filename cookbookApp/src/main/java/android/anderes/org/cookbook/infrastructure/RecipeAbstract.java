@@ -1,4 +1,4 @@
-package android.anderes.org.cookbook.model;
+package android.anderes.org.cookbook.infrastructure;
 
 public class RecipeAbstract {
 

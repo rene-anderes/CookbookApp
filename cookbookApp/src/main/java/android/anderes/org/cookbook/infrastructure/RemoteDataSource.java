@@ -1,6 +1,5 @@
 package android.anderes.org.cookbook.infrastructure;
 
-import android.anderes.org.cookbook.model.RecipeAbstract;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -28,7 +27,7 @@ public class RemoteDataSource {
         this.resources = resources;
     }
 
-    public void getRecipeAbstractCollection(final RemoteDataRecipeAbstract remoteData) {
+    public void getRecipeAbstractCollection(final RecipeAbstractResponse remoteData) {
 
         final ArrayList<RecipeAbstract> list = new ArrayList<>(1);
 
@@ -49,7 +48,7 @@ public class RemoteDataSource {
                                 Log.e(REMOTE_ACCESS, e.getMessage());
                             }
                         }
-                        remoteData.setStatus(RemoteDataRecipeAbstract.Status.OK);
+                        remoteData.setStatus(RecipeAbstractResponse.Status.OK);
                         remoteData.setData(list);
                     }
                 }, new Response.ErrorListener() {
@@ -57,7 +56,7 @@ public class RemoteDataSource {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(REMOTE_ACCESS, "Status-Code: " + error.networkResponse.statusCode);
-                        remoteData.setStatus(RemoteDataRecipeAbstract.Status.ERROR);
+                        remoteData.setStatus(RecipeAbstractResponse.Status.ERROR);
                         remoteData.setData(list);
                     }
                 });

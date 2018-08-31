@@ -1,9 +1,9 @@
 package android.anderes.org.cookbook;
 
-import android.anderes.org.cookbook.infrastructure.RemoteDataRecipeAbstract;
+import android.anderes.org.cookbook.infrastructure.RecipeAbstractResponse;
 import android.anderes.org.cookbook.infrastructure.MyResources;
 import android.anderes.org.cookbook.infrastructure.RemoteDataSource;
-import android.anderes.org.cookbook.model.RecipeAbstract;
+import android.anderes.org.cookbook.infrastructure.RecipeAbstract;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -29,7 +29,7 @@ public class RemoteDataSourceTest {
 
     private Context appContext;
     private MyResources appResources;
-    private RemoteDataRecipeAbstract remoteData;
+    private RecipeAbstractResponse remoteData;
     private MockWebServer server;
 
     @Before
@@ -65,13 +65,13 @@ public class RemoteDataSourceTest {
         final HttpUrl baseUrl = server.url("/resources-api/recipes");
 
         final RemoteDataSource remote = new RemoteDataSource(appResources, baseUrl.toString());
-        remoteData = new RemoteDataRecipeAbstract();
+        remoteData = new RecipeAbstractResponse();
 
         // when
         remote.getRecipeAbstractCollection(remoteData);
         // then
         await().until(userRepositorySize(), equalTo(1));
-        assertThat(remoteData.getStatus(), is(RemoteDataRecipeAbstract.Status.OK));
+        assertThat(remoteData.getStatus(), is(RecipeAbstractResponse.Status.OK));
         final RecipeAbstract recipeAbstract = remoteData.getData().iterator().next();
         assertThat(recipeAbstract, is(not(nullValue())));
         assertThat(recipeAbstract.getTitle(), is("Apfel-Mascarpone-Creme mit Amarettini"));
