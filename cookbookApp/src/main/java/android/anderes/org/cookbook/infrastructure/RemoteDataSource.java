@@ -28,7 +28,7 @@ public class RemoteDataSource {
         this.resources = resources;
     }
 
-    public void getRecipeAbstractCollection(final RemoteDataRecipeAbstract remoteDataRecipeAbstract) {
+    public void getRecipeAbstractCollection(final RemoteDataRecipeAbstract remoteData) {
 
         final ArrayList<RecipeAbstract> list = new ArrayList<>(1);
 
@@ -49,16 +49,16 @@ public class RemoteDataSource {
                                 Log.e(REMOTE_ACCESS, e.getMessage());
                             }
                         }
-                        remoteDataRecipeAbstract.setStatus(RemoteDataRecipeAbstract.Status.OK);
-                        remoteDataRecipeAbstract.setData(list);
+                        remoteData.setStatus(RemoteDataRecipeAbstract.Status.OK);
+                        remoteData.setData(list);
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(REMOTE_ACCESS, "Status-Code: " + error.networkResponse.statusCode);
-                        remoteDataRecipeAbstract.setStatus(RemoteDataRecipeAbstract.Status.ERROR);
-                        remoteDataRecipeAbstract.setData(list);
+                        remoteData.setStatus(RemoteDataRecipeAbstract.Status.ERROR);
+                        remoteData.setData(list);
                     }
                 });
         resources.addToRequestQueue(jsonObjectRequest);

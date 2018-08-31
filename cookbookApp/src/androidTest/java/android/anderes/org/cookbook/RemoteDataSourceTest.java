@@ -3,6 +3,7 @@ package android.anderes.org.cookbook;
 import android.anderes.org.cookbook.infrastructure.RemoteDataRecipeAbstract;
 import android.anderes.org.cookbook.infrastructure.MyResources;
 import android.anderes.org.cookbook.infrastructure.RemoteDataSource;
+import android.anderes.org.cookbook.model.RecipeAbstract;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -28,7 +29,7 @@ public class RemoteDataSourceTest {
 
     private Context appContext;
     private MyResources appResources;
-    private RemoteDataRecipeAbstract remoteDataRecipeAbstract;
+    private RemoteDataRecipeAbstract remoteData;
     private MockWebServer server;
 
     @Before
@@ -64,20 +65,24 @@ public class RemoteDataSourceTest {
         final HttpUrl baseUrl = server.url("/resources-api/recipes");
 
         final RemoteDataSource remote = new RemoteDataSource(appResources, baseUrl.toString());
-        remoteDataRecipeAbstract = new RemoteDataRecipeAbstract();
+        remoteData = new RemoteDataRecipeAbstract();
 
         // when
-        remote.getRecipeAbstractCollection(remoteDataRecipeAbstract);
+        remote.getRecipeAbstractCollection(remoteData);
         // then
         await().until(userRepositorySize(), equalTo(1));
-
-
+        assertThat(remoteData.getStatus(), is(RemoteDataRecipeAbstract.Status.OK));
+        final RecipeAbstract recipeAbstract = remoteData.getData().iterator().next();
+        assertThat(recipeAbstract, is(not(nullValue())));
+        assertThat(recipeAbstract.getTitle(), is("Apfel-Mascarpone-Creme mit Amarettini"));
+        assertThat(recipeAbstract.getRecipeId(), is("4ab99cc8-b21a-4146-97ef-a7949184a173"));
+        assertThat(recipeAbstract.getLastUpdate(), is(1487459207052L));
     }
 
     private Callable<Integer> userRepositorySize() {
         return new Callable<Integer>() {
             public Integer call() throws Exception {
-                return remoteDataRecipeAbstract.getData().size();
+                return remoteData.getData().size();
             }
         };
     }
