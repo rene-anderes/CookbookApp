@@ -3,8 +3,12 @@ package android.anderes.org.cookbook.infrastructure;
 public class RecipeAbstract {
 
     private String title;
-    private String recipeId;
-    private long lastUpdate;
+    private String id;
+    private long editingDate;
+
+    public RecipeAbstract() {
+        super();
+    }
 
     public String getTitle() {
         return title;
@@ -15,21 +19,21 @@ public class RecipeAbstract {
         return this;
     }
 
-    public String getRecipeId() {
-        return recipeId;
+    public String getId() {
+        return id;
     }
 
-    public RecipeAbstract setRecipeId(String recipeId) {
-        this.recipeId = recipeId;
+    public RecipeAbstract setId(String id) {
+        this.id = id;
         return this;
     }
 
-    public long getLastUpdate() {
-        return lastUpdate;
+    public long getEditingDate() {
+        return editingDate;
     }
 
-    public RecipeAbstract setLastUpdate(long lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public RecipeAbstract setEditingDate(long editingDate) {
+        this.editingDate = editingDate;
         return this;
     }
 

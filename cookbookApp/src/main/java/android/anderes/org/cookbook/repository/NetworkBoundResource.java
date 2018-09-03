@@ -1,6 +1,5 @@
 package android.anderes.org.cookbook.repository;
 
-import android.anderes.org.cookbook.infrastructure.ApiResponse;
 import android.anderes.org.cookbook.model.Resource;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
@@ -10,16 +9,31 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 
 // ResultType: Type for the Resource data.
 // RequestType: Type for the API response.
 public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     private final MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
-/*
+
+    @MainThread
+    public NetworkBoundResource() {
+        result.setValue(Resource.loading(null));
+        LiveData<ResultType> dbSource = loadFromDb();
+        fetchFromNetwork(dbSource);
+    }
+
     private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
-        createCall().enqueue(new Callback<RequestType>() {
+        createCall().observeOn(AndroidSchedulers.mainThread()).subscribe(response -> {
+            result.removeSource(dbSource);
+            saveResultAndReInit(response);
+        });
+        /*
+                enqueue(new Callback<RequestType>() {
             @Override
             public void onResponse(Call<RequestType> call, Response<RequestType> response) {
                 result.removeSource(dbSource);
@@ -33,8 +47,9 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                 result.addSource(dbSource, newData -> result.setValue(Resource.error(t.getMessage(), newData)));
             }
         });
+        */
     }
-*/
+
     @MainThread
     private void saveResultAndReInit(RequestType response) {
         new AsyncTask<Void, Void, Void>() {
@@ -68,7 +83,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     // Called to create the API call.
     @NonNull
     @MainThread
-    protected abstract LiveData<ApiResponse<RequestType>> createCall();
+    protected abstract Observable<RequestType> createCall();
 
     // Called when the fetch fails. The child class may want to reset components
     // like rate limiter.

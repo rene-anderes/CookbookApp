@@ -10,7 +10,7 @@ import dagger.Module;
 import dagger.android.AndroidInjectionModule;
 
 @Module(includes = AndroidInjectionModule.class)
-abstract class CookbookModule {
+public abstract class CookbookModule {
 
     /* Singleton annotation isn't necessary
         (in this case since Application instance is unique)

@@ -8,7 +8,7 @@ import dagger.android.AndroidInjector;
 
 @Component(modules = { AndroidInjectionModule.class, ItemListActivityModule.class,
         ItemDetailActivityModule.class, CookbookModule.class })
-public interface MyApplicationComponent extends AndroidInjector<MyApplication> {
+public interface CookbookApplicationComponent extends AndroidInjector<MyApplication> {
 
     @Component.Builder
     abstract class Builder extends AndroidInjector.Builder<MyApplication> {

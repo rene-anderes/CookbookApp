@@ -1,6 +1,6 @@
 package android.anderes.org.cookbook;
 
-import android.anderes.org.cookbook.dagger.DaggerMyApplicationComponent;
+import android.anderes.org.cookbook.dagger.DaggerCookbookApplicationComponent;
 import android.app.Activity;
 import android.app.Application;
 
@@ -19,7 +19,7 @@ public class MyApplication extends Application implements HasActivityInjector {
     public void onCreate() {
         super.onCreate();
 
-        DaggerMyApplicationComponent.builder().create(this).inject(this);
+        DaggerCookbookApplicationComponent.builder().create(this).inject(this);
 
     }
 

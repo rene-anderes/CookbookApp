@@ -8,7 +8,7 @@ import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 
 @Module
-abstract class ItemListActivityModule {
+public abstract class ItemListActivityModule {
     @ContributesAndroidInjector
     abstract ItemListActivity contributeActivityInjector();
 
