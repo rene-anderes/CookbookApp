@@ -1,6 +1,5 @@
 package android.anderes.org.cookbook.repository;
 
-import android.anderes.org.cookbook.model.Resource;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
@@ -8,6 +7,7 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,12 +23,18 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     public NetworkBoundResource() {
         result.setValue(Resource.loading(null));
         LiveData<ResultType> dbSource = loadFromDb();
-        fetchFromNetwork(dbSource);
+        result.addSource(dbSource, data -> {
+            result.removeSource(dbSource);
+            fetchFromNetwork(dbSource);
+        });
+
     }
 
     private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
+
         createCall().observeOn(AndroidSchedulers.mainThread()).subscribe(response -> {
+            Log.v("Testing", "--------------- Response: " + response.toString());
             result.removeSource(dbSource);
             saveResultAndReInit(response);
         });
@@ -62,6 +68,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                Log.v("Testing", "--------------- onPostExecute: " + response.toString());
                 result.addSource(loadFromDb(), newData -> result.setValue(Resource.success(newData)));
             }
         }.execute();
@@ -69,7 +76,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     // Called to save the result of the API response into the database.
     @WorkerThread
-    protected abstract void saveCallResult(@NonNull RequestType item);
+    protected abstract void saveCallResult(@NonNull RequestType data);
 
     // Called with the data in the database to decide whether to fetch
     // potentially updated data from the network.

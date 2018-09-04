@@ -1,13 +1,15 @@
 package android.anderes.org.cookbook.repository;
 
+import android.anderes.org.cookbook.ServiceLocator;
+import android.anderes.org.cookbook.database.RecipeAbstractDao;
+import android.anderes.org.cookbook.database.RecipeAbstractEntity;
+import android.anderes.org.cookbook.database.RecipeEntity;
 import android.anderes.org.cookbook.infrastructure.RecipeAbstract;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
-import android.anderes.org.cookbook.model.Resource;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,42 +21,43 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecipeAbstractRepository {
 
-    private final Retrofit retrofit;
-    private List<RecipeAbstract> list = new ArrayList<>(0);
-    private MediatorLiveData<List<RecipeAbstract>> data = new MediatorLiveData<>();
+    private final RecipeService service;
+    private final RecipeAbstractDao recipeAbstractDao;
 
-    public RecipeAbstractRepository(final String httpUrl) {
-        retrofit = new Retrofit.Builder()
-                .baseUrl(httpUrl)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public RecipeAbstractRepository(@NonNull final RecipeService service,
+                                    @NonNull final RecipeAbstractDao recipeAbstractDao) {
+        this.service = service;
+        this.recipeAbstractDao = recipeAbstractDao;
     }
 
-    public LiveData<Resource<List<RecipeAbstract>>> getRecipes() {
-        return new NetworkBoundResource<List<RecipeAbstract>, List<RecipeAbstract>>() {
+    public LiveData<Resource<List<RecipeAbstractEntity>>> getRecipes() {
+        return new NetworkBoundResource<List<RecipeAbstractEntity>, List<RecipeAbstract>>() {
 
             @Override
-            protected void saveCallResult(@NonNull List<RecipeAbstract> item) {
-                list = item;
+            protected void saveCallResult(@NonNull List<RecipeAbstract> data) {
+                for (RecipeAbstract r : data) {
+                    RecipeAbstractEntity entity = new RecipeAbstractEntity();
+                    entity.setRecipeId(r.getId());
+                    entity.setTitle(r.getTitle());
+                    entity.setLastUpdate(r.getEditingDate());
+                    recipeAbstractDao.insert(entity);
+                }
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<RecipeAbstract> data) {
+            protected boolean shouldFetch(@Nullable List<RecipeAbstractEntity> data) {
                 return false;
             }
 
             @NonNull
             @Override
-            protected LiveData<List<RecipeAbstract>> loadFromDb() {
-                data.setValue(list);
-                return data;
+            protected LiveData<List<RecipeAbstractEntity>> loadFromDb() {
+                return recipeAbstractDao.getAllRecipeAbstract();
             }
 
             @NonNull
             @Override
             protected Observable<List<RecipeAbstract>> createCall() {
-                final RecipeService service = retrofit.create(RecipeService.class);
                 return service.getRecipeAbstract();
             }
 

@@ -1,10 +1,14 @@
 package android.anderes.org.cookbook;
 
+import android.anderes.org.cookbook.database.RecipeAbstractDao;
+import android.anderes.org.cookbook.database.RecipeAbstractEntity;
 import android.anderes.org.cookbook.infrastructure.RecipeAbstract;
-import android.anderes.org.cookbook.model.Resource;
+import android.anderes.org.cookbook.repository.Resource;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
+import android.content.Context;
 import android.support.annotation.MainThread;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
@@ -29,6 +33,8 @@ import static org.junit.Assert.fail;
 public class RecipeAbstractRepositoryTest {
 
     private MockWebServer server;
+    private ServiceLocator serviceLocator;
+    // Use this rule to instantly execute any background operation on the calling thread.
     @Rule // Stellt sicher, dass für LiveDate der richtige Thread verwendet wird
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
 
@@ -48,7 +54,9 @@ public class RecipeAbstractRepositoryTest {
         } catch (IOException e) {
             fail(e.getMessage());
         }
-
+        final HttpUrl baseUrl = server.url("/resources-api/recipes/");
+        final Context context = InstrumentationRegistry.getTargetContext();
+        serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
     }
 
     @After
@@ -63,11 +71,11 @@ public class RecipeAbstractRepositoryTest {
     @Test @MainThread
     public void shouldBeRecipeCollection() throws InterruptedException {
         // given
-        // given
-        final HttpUrl baseUrl = server.url("/resources-api/recipes/");
-        final RecipeAbstractRepository repository = new RecipeAbstractRepository(baseUrl.toString());
+        final RecipeAbstractRepository repository =
+                new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
         // when
-        final Resource<List<RecipeAbstract>> recipesResource = LiveDataTestUtil.getValue(repository.getRecipes());
+        final Resource<List<RecipeAbstractEntity>> recipesResource = LiveDataTestUtil.getValue(repository.getRecipes());
+
         // then
         assertThat(recipesResource, is(notNullValue()));
         assertThat(recipesResource.data, is(notNullValue()));
