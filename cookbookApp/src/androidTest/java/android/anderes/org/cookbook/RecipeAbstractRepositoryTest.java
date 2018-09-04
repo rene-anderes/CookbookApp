@@ -53,12 +53,13 @@ public class RecipeAbstractRepositoryTest {
                 .addHeader("Cache-Control", "no-cache")
                 .setBody("[{\"title\":\"Apfel-Mascarpone-Creme mit Amarettini\",\"id\":\"4ab99cc8-b21a-4146-97ef-a7949184a173\",\"editingDate\":1487459207052}," +
                         "{\"title\":\"Arabische Pasta\",\"id\":\"c0e5582e-252f-4e94-8a49-e12b4b047afb\",\"editingDate\":1515082740753}]"));
+    
         try {
             server.start();
         } catch (IOException e) {
             fail(e.getMessage());
         }
-        final HttpUrl baseUrl = server.url("/resources-api/recipes/");
+        final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
         serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
     }

@@ -22,7 +22,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     @MainThread
     public NetworkBoundResource() {
         result.setValue(Resource.loading(null));
-        LiveData<ResultType> dbSource = loadFromDb();
+        final LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
             result.removeSource(dbSource);
             fetchFromNetwork(dbSource);
@@ -33,27 +33,16 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
 
-        createCall().observeOn(AndroidSchedulers.mainThread()).subscribe(response -> {
-            Log.v("Testing", "--------------- Response: " + response.toString());
-            result.removeSource(dbSource);
-            saveResultAndReInit(response);
-        });
-        /*
-                enqueue(new Callback<RequestType>() {
-            @Override
-            public void onResponse(Call<RequestType> call, Response<RequestType> response) {
-                result.removeSource(dbSource);
-                saveResultAndReInit(response.body());
-            }
+        createCall().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                        result.removeSource(dbSource);
+                        saveResultAndReInit(response);
+                    }, t -> {
+                        onFetchFailed();
+                        result.removeSource(dbSource);
+                        result.addSource(dbSource, newData -> result.setValue(Resource.error(t.getMessage(), newData)));
+                    });
 
-            @Override
-            public void onFailure(Call<RequestType> call, Throwable t) {
-                onFetchFailed();
-                result.removeSource(dbSource);
-                result.addSource(dbSource, newData -> result.setValue(Resource.error(t.getMessage(), newData)));
-            }
-        });
-        */
     }
 
     @MainThread
@@ -68,7 +57,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                Log.v("Testing", "--------------- onPostExecute: " + response.toString());
                 result.addSource(loadFromDb(), newData -> result.setValue(Resource.success(newData)));
             }
         }.execute();
@@ -96,7 +84,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     // like rate limiter.
     @MainThread
     protected void onFetchFailed() {
-        // ToDo ....
+        Log.e("NetworkBoundResource", "onFetchFailed");
     }
 
     // Returns a LiveData object that represents the resource that's implemented

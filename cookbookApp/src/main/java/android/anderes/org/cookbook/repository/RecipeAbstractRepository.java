@@ -1,23 +1,16 @@
 package android.anderes.org.cookbook.repository;
 
-import android.anderes.org.cookbook.ServiceLocator;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
 import android.anderes.org.cookbook.database.RecipeAbstractEntity;
-import android.anderes.org.cookbook.database.RecipeEntity;
 import android.anderes.org.cookbook.infrastructure.RecipeAbstract;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecipeAbstractRepository {
 
@@ -35,6 +28,7 @@ public class RecipeAbstractRepository {
 
             @Override
             protected void saveCallResult(@NonNull List<RecipeAbstract> data) {
+                recipeAbstractDao.deleteAll();
                 for (RecipeAbstract r : data) {
                     RecipeAbstractEntity entity = new RecipeAbstractEntity();
                     entity.setRecipeId(r.getId());
