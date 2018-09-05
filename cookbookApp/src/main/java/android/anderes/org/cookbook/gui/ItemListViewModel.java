@@ -5,18 +5,25 @@ import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.Resource;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
 public class ItemListViewModel extends ViewModel {
 
-    private final LiveData<Resource<List<RecipeAbstractEntity>>> recipes;
+    private LiveData<Resource<List<RecipeAbstractEntity>>> recipes;
+    private RecipeAbstractRepository repository;
 
-    public ItemListViewModel(RecipeAbstractRepository repository) {
-        recipes = repository.getRecipes();
+    public ItemListViewModel() {
+
+    }
+
+    void setRepository(@NonNull final RecipeAbstractRepository repository) {
+        this.repository = repository;
     }
 
     LiveData<Resource<List<RecipeAbstractEntity>>> getRecipes() {
+        recipes = repository.getRecipes();
         return recipes;
     }
 }

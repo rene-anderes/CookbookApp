@@ -11,6 +11,7 @@ import android.util.Log;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 // ResultType: Type for the Resource data.
@@ -33,12 +34,15 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
 
-        createCall().observeOn(AndroidSchedulers.mainThread())
+        createCall()
+                .subscribeOn(Schedulers.io()) // Darf nicht im MainThread gemacht werden
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                         result.removeSource(dbSource);
                         saveResultAndReInit(response);
                     }, t -> {
                         onFetchFailed();
+                        Log.e("NetworkBoundResource", t.toString());
                         result.removeSource(dbSource);
                         result.addSource(dbSource, newData -> result.setValue(Resource.error(t.getMessage(), newData)));
                     });
@@ -72,7 +76,8 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     protected abstract boolean shouldFetch(@Nullable ResultType data);
 
     // Called to get the cached data from the database.
-    @NonNull @MainThread
+    @NonNull
+    @MainThread
     protected abstract LiveData<ResultType> loadFromDb();
 
     // Called to create the API call.

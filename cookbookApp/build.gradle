@@ -43,6 +43,7 @@ dependencies {
     implementation "android.arch.lifecycle:reactivestreams:$rootProject.archLifecycleVersion"
     // Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$rootProject.archLifecycleVersion"
+    androidTestImplementation "android.arch.core:core-testing:$rootProject.archLifecycleVersion"
 
     //Dagger dependencies injection
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"

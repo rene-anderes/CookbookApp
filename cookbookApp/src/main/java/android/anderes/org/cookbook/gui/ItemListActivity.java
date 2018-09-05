@@ -2,15 +2,24 @@ package android.anderes.org.cookbook.gui;
 
 import android.anderes.org.cookbook.NetworkApi;
 import android.anderes.org.cookbook.R;
+import android.anderes.org.cookbook.ServiceLocator;
+import android.anderes.org.cookbook.database.RecipeAbstractEntity;
+import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
+import android.anderes.org.cookbook.repository.Resource;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +45,10 @@ import dagger.android.AndroidInjection;
 public class ItemListActivity extends AppCompatActivity {
 
     /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
     private boolean mTwoPane;
-
-    @Inject
-    NetworkApi networkApi;
+    private ItemListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,22 +57,16 @@ public class ItemListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_item_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Test: " + networkApi.validateUser(null, null),
-                        Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -78,13 +78,33 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.item_list);
+        final View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        final ItemListAdapter adapter = setupRecyclerView((RecyclerView) recyclerView);
+
+        viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
+        final ServiceLocator serviceLocator = new ServiceLocatorForApp(this, "http://www.anderes.org/");
+        viewModel.setRepository(serviceLocator.getRecipeAbstractRepository());
+        viewModel.getRecipes().observe(this, new Observer<Resource<List<RecipeAbstractEntity>>>() {
+            @Override
+            public void onChanged(@Nullable final Resource<List<RecipeAbstractEntity>> resource) {
+                if (resource.status == Resource.Status.SUCCESS) {
+                    // Update the cached copy of the words in the adapter.
+                    adapter.setRecipes(resource.data);
+                } else {
+                    Log.v("GUI", resource.status + " - " + resource.message);
+                    Snackbar.make(recyclerView, resource.status + " - " + resource.message, Snackbar.LENGTH_LONG);
+                }
+            }
+        });
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+    private ItemListAdapter setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        final ItemListAdapter adapter = new ItemListAdapter(this, mTwoPane);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        return adapter;
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
