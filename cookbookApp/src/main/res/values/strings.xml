@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">My MasterDetail</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="app_name">Cookbook</string>
+    <string name="title_item_detail">Recipe Detail</string>
 </resources>
