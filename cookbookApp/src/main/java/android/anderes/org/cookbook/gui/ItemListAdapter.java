@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import static android.anderes.org.cookbook.R.layout.recyclerview_item;
+import static android.anderes.org.cookbook.R.layout.item_list_content;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder>  {
 
@@ -53,7 +53,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
 
         final View itemView = LayoutInflater.from(parent.getContext())
-                                .inflate(recyclerview_item, parent, false);
+                                .inflate(item_list_content, parent, false);
 
         return new ItemViewHolder(itemView);
     }
