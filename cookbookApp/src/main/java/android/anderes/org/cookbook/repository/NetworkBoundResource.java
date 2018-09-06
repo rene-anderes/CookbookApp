@@ -26,7 +26,11 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         final LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
             result.removeSource(dbSource);
-            fetchFromNetwork(dbSource);
+            if (shouldFetch(data)) {
+                fetchFromNetwork(dbSource);
+            } else {
+                result.addSource(dbSource, newData -> result.setValue(Resource.success(newData)));
+            }
         });
 
     }
@@ -38,6 +42,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                 .subscribeOn(Schedulers.io()) // Darf nicht im MainThread gemacht werden
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
+                        Log.v("NetworkBoundResource", "Fetch remote data.");
                         result.removeSource(dbSource);
                         saveResultAndReInit(response);
                     }, t -> {

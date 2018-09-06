@@ -30,7 +30,7 @@ public class RecipeAbstractRepository {
             protected void saveCallResult(@NonNull List<RecipeAbstract> data) {
                 recipeAbstractDao.deleteAll();
                 for (RecipeAbstract r : data) {
-                    RecipeAbstractEntity entity = new RecipeAbstractEntity();
+                    final RecipeAbstractEntity entity = new RecipeAbstractEntity();
                     entity.setRecipeId(r.getId());
                     entity.setTitle(r.getTitle());
                     entity.setLastUpdate(r.getEditingDate());
@@ -40,7 +40,7 @@ public class RecipeAbstractRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<RecipeAbstractEntity> data) {
-                return false;
+                return data == null || data.size() == 0;
             }
 
             @NonNull
@@ -57,4 +57,5 @@ public class RecipeAbstractRepository {
 
         }.getAsLiveData();
     }
+
 }

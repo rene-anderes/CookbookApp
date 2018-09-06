@@ -11,6 +11,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -64,6 +66,14 @@ public class RecipeAbstractRepositoryTest {
         serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
     }
 
+    private RecipeAbstractEntity createRecipeAbstractEntity() {
+        RecipeAbstractEntity r = new RecipeAbstractEntity();
+        r.setRecipeId("4135431253");
+        r.setLastUpdate(243123431L);
+        r.setTitle("Arabische Pasta");
+        return r;
+    }
+
     @After
     public void tearDown() {
         try {
@@ -75,6 +85,7 @@ public class RecipeAbstractRepositoryTest {
 
     @Test
     public void shouldBeRecipeCollection() throws InterruptedException {
+
         // given
         final RecipeAbstractRepository repository =
                 new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
@@ -86,6 +97,14 @@ public class RecipeAbstractRepositoryTest {
         assertThat(recipesResource, is(notNullValue()));
         assertThat(recipesResource.data, is(notNullValue()));
         assertThat(recipesResource.data.size(), is(2));
+
+        final Resource<List<RecipeAbstractEntity>> recipesResource1 =
+                LiveDataTestUtil.getValue(repository.getRecipes(), 2);
+
+        // then
+        assertThat(recipesResource1, is(notNullValue()));
+        assertThat(recipesResource1.data, is(notNullValue()));
+        assertThat(recipesResource1.data.size(), is(2));
     }
 
     @Test

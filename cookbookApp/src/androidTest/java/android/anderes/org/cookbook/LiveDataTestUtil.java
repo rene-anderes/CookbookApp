@@ -16,7 +16,6 @@ public class LiveDataTestUtil {
         Observer < T > observer = new Observer< T >() {
             @Override
             public void onChanged(@Nullable T o) {
-                Log.v("Testing", "--------------- o.status: " + ((Resource)o).status);
                 data[0] = o;
                 latch.countDown();
                 if (latch.getCount() <= 0) {

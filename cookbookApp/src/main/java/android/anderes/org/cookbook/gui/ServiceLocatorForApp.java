@@ -32,9 +32,7 @@ public class ServiceLocatorForApp implements ServiceLocator {
         if (database == null) {
             synchronized (CookbookDatabase.class) {
                 if (database == null) {
-                    database = Room.inMemoryDatabaseBuilder(context, CookbookDatabase.class)
-                            .allowMainThreadQueries()
-                            .build();
+                    database = Room.databaseBuilder(context, CookbookDatabase.class, "cookbook_database").build();
                 }
             }
         }
