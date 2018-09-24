@@ -29,7 +29,13 @@ public class RecipeRepository {
                 entity.setRecipeId(data.getId());
                 entity.setTitle(data.getTitle());
                 entity.setTags(data.getTags());
-                recipeDao.update(entity);
+                entity.setAddingDate(data.getAddingDate());
+                entity.setEditingDate(data.getEditingDate());
+                entity.setRating(data.getRating());
+                entity.setPreamble(data.getPreamble());
+                entity.setPreparation(data.getPreparation());
+                entity.setNoOfPeople(data.getNoOfPeople());
+                recipeDao.insert(entity);
             }
 
             @Override

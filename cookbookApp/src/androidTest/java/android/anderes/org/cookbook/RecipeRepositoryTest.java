@@ -64,6 +64,14 @@ public class RecipeRepositoryTest {
         assertThat(recipeResource.status, is(Resource.Status.SUCCESS));
         assertThat(recipeResource.data, is(notNullValue()));
         assertThat(recipeResource.data.getRecipeId(), is("c0e5582e-252f-4e94-8a49-e12b4b047afb"));
+        assertThat(recipeResource.data.getTitle(), is("Arabische Pasta"));
+        assertThat(recipeResource.data.getAddingDate(), is(1250959818424L));
+        assertThat(recipeResource.data.getEditingDate(), is(1515082740753L));
+        assertThat(recipeResource.data.getNoOfPeople(), is("2"));
+        assertThat(recipeResource.data.getPreamble(), is(notNullValue()));
+        assertThat(recipeResource.data.getPreparation(), is(notNullValue()));
+        assertThat(recipeResource.data.getRating(), is(5));
         assertThat(recipeResource.data.getTags(), is(notNullValue()));
+        assertThat(recipeResource.data.getTags().size(), is(2));
     }
 }
