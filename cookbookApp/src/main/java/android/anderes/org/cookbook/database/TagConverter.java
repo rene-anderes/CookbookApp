@@ -7,12 +7,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 public class TagConverter {
 
-    private final static Gson gson = new Gson();
+    private final static Gson GSON = new Gson();
 
     @TypeConverter
     public static Set<String> stringToStringSet(String data) {
@@ -20,13 +19,13 @@ public class TagConverter {
             return Collections.emptySet();
         }
 
-        Type listType = new TypeToken<Set<String>>() {}.getType();
+        final Type listType = new TypeToken<Set<String>>() {}.getType();
 
-        return gson.fromJson(data, listType);
+        return GSON.fromJson(data, listType);
     }
 
     @TypeConverter
     public static String stringSetToString(Set<String> tags) {
-        return gson.toJson(tags);
+        return GSON.toJson(tags);
     }
 }
