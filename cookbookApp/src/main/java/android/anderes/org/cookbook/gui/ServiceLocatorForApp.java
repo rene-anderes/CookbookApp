@@ -3,6 +3,7 @@ package android.anderes.org.cookbook.gui;
 import android.anderes.org.cookbook.ServiceLocator;
 import android.anderes.org.cookbook.database.CookbookDatabase;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
+import android.anderes.org.cookbook.database.RecipeDao;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.arch.persistence.room.Room;
@@ -54,5 +55,7 @@ public class ServiceLocatorForApp implements ServiceLocator {
         return getDatabase().recipeAbstractDao();
     }
 
+    @Override
+    public RecipeDao getRecipeDao() { return getDatabase().recipeDao(); }
 
 }

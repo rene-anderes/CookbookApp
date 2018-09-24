@@ -2,6 +2,7 @@ package android.anderes.org.cookbook;
 
 import android.anderes.org.cookbook.database.CookbookDatabase;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
+import android.anderes.org.cookbook.database.RecipeDao;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 
@@ -16,4 +17,6 @@ public interface ServiceLocator {
     RecipeService getRecipeService();
 
     RecipeAbstractDao getRecipeAbstractDao();
+
+    RecipeDao getRecipeDao();
 }

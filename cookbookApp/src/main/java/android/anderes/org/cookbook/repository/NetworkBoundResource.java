@@ -50,12 +50,12 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                         Log.e("NetworkBoundResource", t.toString());
                         result.removeSource(dbSource);
                         result.addSource(dbSource, newData -> result.setValue(Resource.error(t.getMessage(), newData)));
-                    });
+                    }).isDisposed();
 
     }
 
     @MainThread
-    private void saveResultAndReInit(RequestType response) {
+    private void saveResultAndReInit(final RequestType response) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override

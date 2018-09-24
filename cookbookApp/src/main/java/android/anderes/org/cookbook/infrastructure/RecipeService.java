@@ -12,5 +12,5 @@ public interface RecipeService {
     Observable<List<RecipeAbstract>> getRecipeAbstract();
 
     @GET("resources-api/recipes/{id}")
-    Observable<Recipe> getCommitsByName(@Path("id") String recipeId);
+    Observable<Recipe> getRecipe(@Path("id") String recipeId);
 }

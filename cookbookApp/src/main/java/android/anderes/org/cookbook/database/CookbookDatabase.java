@@ -6,4 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 @Database(entities = { RecipeAbstractEntity.class, RecipeEntity.class }, version = 1)
 public abstract class CookbookDatabase extends RoomDatabase {
     public abstract RecipeAbstractDao recipeAbstractDao();
+
+    public abstract RecipeDao recipeDao();
+
 }
