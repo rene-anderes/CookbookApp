@@ -73,21 +73,18 @@ public class ItemListActivity extends AppCompatActivity {
         final ItemListAdapter adapter = setupRecyclerView((RecyclerView) recyclerView);
 
         viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
-        final ServiceLocator serviceLocator = new ServiceLocatorForApp(this, "http://www.anderes.org/");
-        viewModel.setRepository(serviceLocator.getRecipeAbstractRepository());
-        viewModel.getRecipes().observe(this, new Observer<Resource<List<RecipeAbstractEntity>>>() {
-            @Override
-            public void onChanged(@Nullable final Resource<List<RecipeAbstractEntity>> resource) {
-                if (resource.status == Status.SUCCESS) {
-                    // Update the cached copy of the recipes in the adapter.
-                    adapter.setRecipes(resource.data);
-                    Snackbar.make(recyclerView, R.string.msg_recipes_updated, Snackbar.LENGTH_SHORT).show();
-                } else if (resource.status == Status.LOADING) {
-                    Snackbar.make(recyclerView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
-                } else if (resource.status == Status.ERROR) {
-                    Log.v("GUI", resource.status + " - " + resource.message);
-                    Snackbar.make(recyclerView, resource.status + " - " + resource.message, Snackbar.LENGTH_SHORT).show();
-                }
+        viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeAbstractRepository());
+
+        viewModel.getRecipes().observe(this, resource -> {
+            if (resource.status == Status.SUCCESS) {
+                // Update the cached copy of the recipes in the adapter.
+                adapter.setRecipes(resource.data);
+                Snackbar.make(recyclerView, R.string.msg_recipes_updated, Snackbar.LENGTH_SHORT).show();
+            } else if (resource.status == Status.LOADING) {
+                Snackbar.make(recyclerView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
+            } else if (resource.status == Status.ERROR) {
+                Log.v("GUI", resource.status + " - " + resource.message);
+                Snackbar.make(recyclerView, resource.status + " - " + resource.message, Snackbar.LENGTH_INDEFINITE).show();
             }
         });
     }
