@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 /**
@@ -96,8 +97,10 @@ public class ItemDetailFragment extends Fragment {
         }
         final String noOfPerson = getResources().getString(R.string.noOfPerson_item_detail, recipe.getNoOfPeople());
         ((TextView) rootView.findViewById(R.id.noOfPerson)).setText(noOfPerson);
-        final Spanned preperation = Html.fromHtml(recipe.getPreparation());
-        ((TextView) rootView.findViewById(R.id.preperation)).setText(preperation);
+        final Spanned preparation = Html.fromHtml(recipe.getPreparation());
+        ((TextView) rootView.findViewById(R.id.preparation)).setText(preparation);
+        final RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.rating);
+        ratingBar.setRating(recipe.getRating());
     }
 
     @Override

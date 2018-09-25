@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/noOfPerson"
-        style="@android:style/TextAppearance.Material.Large"
+        style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -30,16 +30,24 @@
     </android.support.v7.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/preperation_title"
-        style="@android:style/TextAppearance.Material.Large"
+        android:id="@+id/preparation_title"
+        style="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/preperation_title_item_detail" />
+        android:text="@string/preparation_title_item_detail" />
 
     <TextView
-        android:id="@+id/preperation"
+        android:id="@+id/preparation"
         style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <RatingBar
+        android:id="@+id/rating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5" />
 
 </LinearLayout>
