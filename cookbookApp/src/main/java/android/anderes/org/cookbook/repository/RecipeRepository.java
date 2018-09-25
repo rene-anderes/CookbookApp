@@ -15,7 +15,8 @@ public class RecipeRepository {
     private final RecipeService service;
     private final RecipeDao recipeDao;
 
-    public RecipeRepository(final RecipeService recipeService, final RecipeDao recipeDao) {
+    public RecipeRepository(@NonNull final RecipeService recipeService,
+                            @NonNull final RecipeDao recipeDao) {
         this.service = recipeService;
         this.recipeDao = recipeDao;
     }

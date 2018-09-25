@@ -1,6 +1,7 @@
 package android.anderes.org.cookbook;
 
 import android.anderes.org.cookbook.database.CookbookDatabase;
+import android.anderes.org.cookbook.database.IngredientDao;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
 import android.anderes.org.cookbook.database.RecipeDao;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
@@ -58,5 +59,10 @@ public class ServiceLocatorForTest implements ServiceLocator {
 
     @Override
     public RecipeDao getRecipeDao() { return getDatabase().recipeDao(); }
+
+    @Override
+    public IngredientDao getIngredientDao() {
+        return getDatabase().ingredientDao();
+    }
 
 }

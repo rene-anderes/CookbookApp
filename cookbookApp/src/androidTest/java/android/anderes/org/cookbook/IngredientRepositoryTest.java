@@ -1,7 +1,8 @@
 package android.anderes.org.cookbook;
 
+import android.anderes.org.cookbook.database.IngredientEntity;
 import android.anderes.org.cookbook.database.RecipeEntity;
-import android.anderes.org.cookbook.repository.RecipeRepository;
+import android.anderes.org.cookbook.repository.IngredientRepository;
 import android.anderes.org.cookbook.repository.Resource;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
@@ -10,9 +11,9 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -23,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.fail;
 
-public class RecipeRepositoryTest {
+public class IngredientRepositoryTest {
 
     private MockWebServer server;
     private ServiceLocator serviceLocator;
@@ -50,27 +51,19 @@ public class RecipeRepositoryTest {
     }
 
     @Test
-    public void shouldBeCorrectRecipe() throws Exception {
+    public void shouldBeCorrectIngredients() throws Exception {
         // given
-        final RecipeRepository repository = new RecipeRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeDao());
+        final IngredientRepository repository = new IngredientRepository(serviceLocator.getRecipeService(), serviceLocator.getIngredientDao());
 
         // when
-        final Resource<RecipeEntity> recipeResource =
-                LiveDataTestUtil.getValue(repository.getRecipe("c0e5582e-252f-4e94-8a49-e12b4b047afb"), 2);
+        final Resource<List<IngredientEntity>> ingredientsResource =
+                LiveDataTestUtil.getValue(repository.getIngredients("c0e5582e-252f-4e94-8a49-e12b4b047afb"), 2);
 
         // then
-        assertThat(recipeResource, is(notNullValue()));
-        assertThat(recipeResource.status, is(Resource.Status.SUCCESS));
-        assertThat(recipeResource.data, is(notNullValue()));
-        assertThat(recipeResource.data.getRecipeId(), is("c0e5582e-252f-4e94-8a49-e12b4b047afb"));
-        assertThat(recipeResource.data.getTitle(), is("Arabische Pasta"));
-        assertThat(recipeResource.data.getAddingDate(), is(1250959818424L));
-        assertThat(recipeResource.data.getEditingDate(), is(1515082740753L));
-        assertThat(recipeResource.data.getNoOfPeople(), is("2"));
-        assertThat(recipeResource.data.getPreamble(), is(notNullValue()));
-        assertThat(recipeResource.data.getPreparation(), is(notNullValue()));
-        assertThat(recipeResource.data.getRating(), is(5));
-        assertThat(recipeResource.data.getTags(), is(notNullValue()));
-        assertThat(recipeResource.data.getTags().size(), is(2));
+        assertThat(ingredientsResource, is(notNullValue()));
+        assertThat(ingredientsResource.status, is(Resource.Status.SUCCESS));
+        assertThat(ingredientsResource.data, is(notNullValue()));
+        assertThat(ingredientsResource.data.size(), is(11));
+
     }
 }
