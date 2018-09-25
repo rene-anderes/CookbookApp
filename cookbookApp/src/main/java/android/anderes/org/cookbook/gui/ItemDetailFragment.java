@@ -2,14 +2,20 @@ package android.anderes.org.cookbook.gui;
 
 import android.anderes.org.cookbook.R;
 import android.anderes.org.cookbook.ServiceLocator;
+import android.anderes.org.cookbook.database.RecipeEntity;
 import android.anderes.org.cookbook.repository.Resource;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +75,7 @@ public class ItemDetailFragment extends Fragment {
                     if (appBarLayout != null) {
                         appBarLayout.setTitle(resource.data.getTitle());
                     }
-                    ((TextView) rootView.findViewById(R.id.item_detail)).setText(resource.data.getPreamble());
+                    handleItemDetail(resource.data);
                     Snackbar.make(rootView, R.string.msg_recipes_updated, Snackbar.LENGTH_SHORT).show();
                 } else if (resource.status == Resource.Status.LOADING) {
                     Snackbar.make(rootView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
@@ -83,6 +89,16 @@ public class ItemDetailFragment extends Fragment {
         }
     }
 
+    private void handleItemDetail(@NonNull final RecipeEntity recipe) {
+        if (recipe.getPreamble() != null && !recipe.getPreamble().isEmpty()) {
+            final Spanned preamble = Html.fromHtml(recipe.getPreamble());
+            ((TextView) rootView.findViewById(R.id.preamble)).setText(preamble);
+        }
+        final String noOfPerson = getResources().getString(R.string.noOfPerson_item_detail, recipe.getNoOfPeople());
+        ((TextView) rootView.findViewById(R.id.noOfPerson)).setText(noOfPerson);
+        final Spanned preperation = Html.fromHtml(recipe.getPreparation());
+        ((TextView) rootView.findViewById(R.id.preperation)).setText(preperation);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

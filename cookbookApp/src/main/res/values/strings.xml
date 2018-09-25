@@ -3,4 +3,6 @@
     <string name="title_item_detail">Recipe Detail</string>
     <string name="msg_recipes_updated">Rezepte sind aktualisiert.</string>
     <string name="msg_recipes_loading">Rezepte werden aktualisiert ...</string>
+    <string name="noOfPerson_item_detail">Zutaten für %s Personen</string>
+    <string name="preperation_title_item_detail">Zubereitung</string>
 </resources>
