@@ -89,7 +89,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            recipeItemView = itemView.findViewById(R.id.textView);
+            recipeItemView = itemView.findViewById(R.id.ingredient_portion);
         }
     }
 }
