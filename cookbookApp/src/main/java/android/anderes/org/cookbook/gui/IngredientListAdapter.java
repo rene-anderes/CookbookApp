@@ -46,7 +46,7 @@ public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAd
         return ingredients.size();
     }
 
-    public void setIngredients(@NonNull final List<IngredientEntity> ingredients) {
+    void setIngredients(@NonNull final List<IngredientEntity> ingredients) {
         this.ingredients = ingredients;
         notifyDataSetChanged();
     }
@@ -56,7 +56,7 @@ public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAd
         private final TextView ingredientDescription;
         private final TextView ingredientComment;
 
-        public ItemViewHolder(@NonNull View itemView) {
+        ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ingredientPortion = itemView.findViewById(R.id.ingredient_portion);
             ingredientDescription = itemView.findViewById(R.id.ingredient_description);
