@@ -32,7 +32,7 @@ public class ServiceLocatorForApp implements ServiceLocator {
         return instance;
     }
 
-    public static @NonNull ServiceLocator getInstance() {
+    static @NonNull ServiceLocator getInstance() {
         return instance;
     }
 

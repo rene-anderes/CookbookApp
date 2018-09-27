@@ -31,10 +31,20 @@ public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAd
         if (ingredients == null) {
             return;
         }
-        IngredientEntity current = ingredients.get(position);
-        itemViewHolder.ingredientPortion.setText(current.getPortion());
-        itemViewHolder.ingredientDescription.setText(current.getDescription());
-        itemViewHolder.ingredientComment.setText(current.getComment());
+        final IngredientEntity current = ingredients.get(position);
+
+        if (current.getPortion() != null && !current.getPortion().isEmpty()) {
+            itemViewHolder.ingredientPortion.setText(current.getPortion() + " ");
+        } else {
+            itemViewHolder.ingredientPortion.setText(null);
+        }
+
+        String description = current.getDescription();
+        if (current.getComment() != null && !current.getComment().isEmpty()) {
+            description += '\n' + current.getComment();
+        }
+
+        itemViewHolder.ingredientDescription.setText(description);
         itemViewHolder.itemView.setTag(ingredients.get(position));
     }
 
@@ -46,7 +56,7 @@ public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAd
         return ingredients.size();
     }
 
-    void setIngredients(@NonNull final List<IngredientEntity> ingredients) {
+    void setIngredients(final List<IngredientEntity> ingredients) {
         this.ingredients = ingredients;
         notifyDataSetChanged();
     }
@@ -54,13 +64,11 @@ public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAd
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         private final TextView ingredientPortion;
         private final TextView ingredientDescription;
-        private final TextView ingredientComment;
 
         ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ingredientPortion = itemView.findViewById(R.id.ingredient_portion);
             ingredientDescription = itemView.findViewById(R.id.ingredient_description);
-            ingredientComment = itemView.findViewById(R.id.ingredient_comment);
         }
     }
 }

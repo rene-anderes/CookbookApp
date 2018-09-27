@@ -60,7 +60,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder itemViewHolder, int position) {
-        if (recipes != null) {
+        if (recipes != null && !recipes.isEmpty()) {
             RecipeAbstractEntity current = recipes.get(position);
             itemViewHolder.recipeItemView.setText(current.getTitle());
             itemViewHolder.itemView.setTag(recipes.get(position));
@@ -87,7 +87,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         private final TextView recipeItemView;
 
-        public ItemViewHolder(@NonNull View itemView) {
+        ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             recipeItemView = itemView.findViewById(R.id.item_title);
         }
