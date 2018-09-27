@@ -5,6 +5,7 @@ import android.anderes.org.cookbook.database.IngredientDao;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
 import android.anderes.org.cookbook.database.RecipeDao;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
+import android.anderes.org.cookbook.repository.IngredientRepository;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.RecipeRepository;
 
@@ -25,4 +26,6 @@ public interface ServiceLocator {
     IngredientDao getIngredientDao();
 
     RecipeRepository getRecipeRepository();
+
+    IngredientRepository getIngredientRepository();
 }

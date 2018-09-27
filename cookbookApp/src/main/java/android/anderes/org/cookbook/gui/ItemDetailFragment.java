@@ -13,6 +13,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
@@ -31,8 +32,7 @@ import android.widget.TextView;
  */
 public class ItemDetailFragment extends Fragment {
     /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
+     * The fragment argument representing the item ID that this fragment represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
 
@@ -57,7 +57,21 @@ public class ItemDetailFragment extends Fragment {
             if (appBarLayout != null) {
                 appBarLayout.setTitle(null /*mItem.details*/);
             }
+            if (savedInstanceState == null) {
+                // Create the detail fragment and add it to the activity
+                // using a fragment transaction.
+                Bundle arguments = new Bundle();
+                arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
+                        activity.getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+                IngredientListFragment fragment = new IngredientListFragment();
+                fragment.setArguments(arguments);
+                ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction()
+                        .add(R.id.item_detail_ingredients, fragment)
+                        .commit();
+            }
         }
+
+
     }
 
     @Override
@@ -99,7 +113,7 @@ public class ItemDetailFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.noOfPerson)).setText(noOfPerson);
         final Spanned preparation = Html.fromHtml(recipe.getPreparation());
         ((TextView) rootView.findViewById(R.id.preparation)).setText(preparation);
-        final RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.rating);
+        final RatingBar ratingBar = rootView.findViewById(R.id.rating);
         ratingBar.setRating(recipe.getRating());
     }
 

@@ -6,6 +6,7 @@ import android.anderes.org.cookbook.database.IngredientDao;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
 import android.anderes.org.cookbook.database.RecipeDao;
 import android.anderes.org.cookbook.infrastructure.RecipeService;
+import android.anderes.org.cookbook.repository.IngredientRepository;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.RecipeRepository;
 import android.arch.persistence.room.Room;
@@ -82,6 +83,11 @@ public class ServiceLocatorForApp implements ServiceLocator {
     @Override
     public RecipeRepository getRecipeRepository() {
         return new RecipeRepository(getRecipeService(), getRecipeDao());
+    }
+
+    @Override
+    public IngredientRepository getIngredientRepository() {
+        return new IngredientRepository(getRecipeService(), getIngredientDao());
     }
 
 }
