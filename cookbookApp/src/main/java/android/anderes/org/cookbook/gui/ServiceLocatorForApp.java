@@ -11,6 +11,8 @@ import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.RecipeRepository;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import retrofit2.Retrofit;
@@ -90,4 +92,10 @@ public class ServiceLocatorForApp implements ServiceLocator {
         return new IngredientRepository(getRecipeService(), getIngredientDao());
     }
 
+    @Override
+    public boolean isOnline() {
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 }

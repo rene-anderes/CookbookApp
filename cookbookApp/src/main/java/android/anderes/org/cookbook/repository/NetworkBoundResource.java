@@ -22,7 +22,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     @MainThread
     public NetworkBoundResource() {
-        result.setValue(Resource.loading(null));
+
         final LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
             result.removeSource(dbSource);
@@ -102,5 +102,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     public final LiveData<Resource<ResultType>> getAsLiveData() {
         return result;
     }
+
 
 }

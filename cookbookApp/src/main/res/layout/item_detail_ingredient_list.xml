@@ -6,5 +6,5 @@
     android:name="android.anderes.org.cookbook.ItemDetailIngredientListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:listitem="@layout/item_detail_ingredient_list"
-    />
+    android:layout_marginBottom="16dp"
+    tools:listitem="@layout/item_detail_ingredient_list" />

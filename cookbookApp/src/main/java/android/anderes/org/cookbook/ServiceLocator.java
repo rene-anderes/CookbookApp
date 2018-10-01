@@ -9,8 +9,6 @@ import android.anderes.org.cookbook.repository.IngredientRepository;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.RecipeRepository;
 
-import retrofit2.Retrofit;
-
 public interface ServiceLocator {
 
     CookbookDatabase getDatabase();
@@ -28,4 +26,6 @@ public interface ServiceLocator {
     RecipeRepository getRecipeRepository();
 
     IngredientRepository getIngredientRepository();
+
+    boolean isOnline();
 }

@@ -53,10 +53,6 @@ public class ItemDetailFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(null /*mItem.details*/);
-            }
             if (savedInstanceState == null) {
                 // Create the detail fragment and add it to the activity
                 // using a fragment transaction.
@@ -83,9 +79,16 @@ public class ItemDetailFragment extends Fragment {
             viewModel = ViewModelProviders.of(this).get(ItemDetailViewModel.class);
             viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeRepository());
 
+            final Activity activity = this.getActivity();
+            final CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+
+            rootView.findViewById(R.id.preparation_title).setVisibility(View.INVISIBLE);
+            rootView.findViewById(R.id.rating).setVisibility(View.INVISIBLE);
+
             viewModel.getRecipe(itemId).observe(this, resource -> {
-                final Activity activity = this.getActivity();
-                final CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle("  ");
+                }
                 if (resource.status == Resource.Status.SUCCESS) {
                     if (appBarLayout != null) {
                         appBarLayout.setTitle(resource.data.getTitle());
@@ -105,6 +108,8 @@ public class ItemDetailFragment extends Fragment {
     }
 
     private void handleItemDetail(@NonNull final RecipeEntity recipe) {
+        rootView.findViewById(R.id.preparation_title).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.rating).setVisibility(View.VISIBLE);
         if (recipe.getPreamble() != null && !recipe.getPreamble().isEmpty()) {
             final Spanned preamble = Html.fromHtml(recipe.getPreamble());
             ((TextView) rootView.findViewById(R.id.preamble)).setText(preamble);

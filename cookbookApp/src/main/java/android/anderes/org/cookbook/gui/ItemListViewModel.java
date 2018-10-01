@@ -23,7 +23,9 @@ public class ItemListViewModel extends ViewModel {
     }
 
     LiveData<Resource<List<RecipeAbstractEntity>>> getRecipes() {
-        recipes = repository.getRecipes();
+        if(recipes == null) {
+            recipes = repository.getRecipes();
+        }
         return recipes;
     }
 }

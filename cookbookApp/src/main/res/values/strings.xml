@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">Cookbook</string>
+    <string name="app_name">Kochbuch chez René</string>
     <string name="title_item_detail">Recipe Detail</string>
     <string name="msg_recipes_updated">Rezepte sind aktualisiert.</string>
     <string name="msg_recipes_loading">Rezepte werden aktualisiert ...</string>
     <string name="noOfPerson_item_detail">Zutaten für %s Personen</string>
     <string name="preparation_title_item_detail">Zubereitung</string>
+    <string name="ok">OK</string>
+    <string name="pref_fullSync">Vollständige Synchronisation</string>
+    <string name="pref_fullSync_desc">Bei einer vollständigen Synchronisation werde auch alle Rezept-Details synchronisiert.</string>
+    <string name="pref_backgroundSync">Hintergrund-Synchronisation</string>
+    <string name="pref_backgroundSync_desc">Bei einer bestehenden Internet-Verbindung werden die Rezepte im Hintergund regemässig synchronisiert.</string>
+    <string name="action_settings">Settings</string>
 </resources>

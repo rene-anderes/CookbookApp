@@ -78,5 +78,8 @@ public class ServiceLocatorForTest implements ServiceLocator {
         return null;
     }
 
-
+    @Override
+    public boolean isOnline() {
+        return true;
+    }
 }

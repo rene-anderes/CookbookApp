@@ -5,25 +5,22 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <TextView
+        android:id="@+id/ingredient_portion"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="portion" />
 
-        <TextView
-            android:id="@+id/ingredient_portion"
-            style="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="portion" />
-
-        <TextView
-            android:id="@+id/ingredient_description"
-            style="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@id/ingredient_portion"
-            android:text="description" />
-    </TableRow>
+    <TextView
+        android:id="@+id/ingredient_description"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@id/ingredient_portion"
+        android:text="description" />
 
 </LinearLayout>
