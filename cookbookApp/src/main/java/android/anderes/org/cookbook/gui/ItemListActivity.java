@@ -60,9 +60,10 @@ public class ItemListActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
 
         final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view ->
+        fab.setOnClickListener(view -> {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show());
+                    .setAction("Action", null).show();
+        });
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -79,7 +80,11 @@ public class ItemListActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
         viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeAbstractRepository());
 
-        viewModel.getRecipes().observe(this, resource -> {
+
+        final Observer<Resource<List<RecipeAbstractEntity>>> observer = resource -> {
+            if (resource == null) {
+                return;
+            }
             if (resource.status == Status.SUCCESS) {
                 // Update the cached copy of the recipes in the adapter.
                 adapter.setRecipes(resource.data);
@@ -90,7 +95,14 @@ public class ItemListActivity extends AppCompatActivity {
                 Log.v("GUI", resource.status + " - " + resource.message);
                 Snackbar.make(recyclerView, resource.status + " - " + resource.message, Snackbar.LENGTH_INDEFINITE).show();
             }
-        });
+        };
+        viewModel.getRecipes().observe(this, observer);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.getRecipes().removeObservers(this);
     }
 
     @Override

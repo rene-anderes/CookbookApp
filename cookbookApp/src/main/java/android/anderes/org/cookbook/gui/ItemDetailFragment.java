@@ -51,20 +51,23 @@ public class ItemDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            Activity activity = this.getActivity();
+        final Activity activity = this.getActivity();
+
+        if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID) && activity != null) {
             if (savedInstanceState == null) {
                 // Create the detail fragment and add it to the activity
                 // using a fragment transaction.
-                Bundle arguments = new Bundle();
+                final Bundle arguments = new Bundle();
                 arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
                         activity.getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
-                IngredientListFragment fragment = new IngredientListFragment();
+                final IngredientListFragment fragment = new IngredientListFragment();
                 fragment.setArguments(arguments);
                 ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction()
                         .add(R.id.item_detail_ingredients, fragment)
                         .commit();
             }
+        } else {
+            Log.w("onCreate", "ItemDetailFragment: check the conditions!");
         }
 
 
@@ -74,12 +77,13 @@ public class ItemDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            String itemId = getArguments().getString(ARG_ITEM_ID);
+        final Activity activity = this.getActivity();
+        if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID) && activity != null) {
+            final String itemId = getArguments().getString(ARG_ITEM_ID);
             viewModel = ViewModelProviders.of(this).get(ItemDetailViewModel.class);
             viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeRepository());
 
-            final Activity activity = this.getActivity();
+
             final CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
 
             rootView.findViewById(R.id.preparation_title).setVisibility(View.INVISIBLE);
@@ -87,7 +91,7 @@ public class ItemDetailFragment extends Fragment {
 
             viewModel.getRecipe(itemId).observe(this, resource -> {
                 if (appBarLayout != null) {
-                    appBarLayout.setTitle("  ");
+                    appBarLayout.setTitle("...");
                 }
                 if (resource.status == Resource.Status.SUCCESS) {
                     if (appBarLayout != null) {
@@ -104,6 +108,8 @@ public class ItemDetailFragment extends Fragment {
 
             });
 
+        } else {
+            Log.w("onCreate", "ItemDetailFragment: check the conditions!");
         }
     }
 
@@ -123,7 +129,7 @@ public class ItemDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.item_detail, container, false);
         return rootView;
     }

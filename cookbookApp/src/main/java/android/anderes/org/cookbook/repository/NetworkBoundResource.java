@@ -2,6 +2,7 @@ package android.anderes.org.cookbook.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
@@ -99,7 +100,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
 
     // Returns a LiveData object that represents the resource that's implemented
     // in the base class.
-    public final LiveData<Resource<ResultType>> getAsLiveData() {
+    public final MutableLiveData<Resource<ResultType>> getAsLiveData() {
         return result;
     }
 

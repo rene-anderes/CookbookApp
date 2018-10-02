@@ -1,9 +1,10 @@
 package android.anderes.org.cookbook.gui;
 
 import android.anderes.org.cookbook.R;
-import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -13,6 +14,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+
     }
 
 }

@@ -12,7 +12,7 @@
     <string name="pref_fullSync">Vollständige Synchronisation</string>
     <string name="pref_fullSync_desc">Bei einer vollständigen Synchronisation werde auch alle Rezept-Details synchronisiert.</string>
     <string name="pref_backgroundSync">Hintergrund-Synchronisation</string>
-    <string name="pref_backgroundSync_desc">Bei einer bestehenden Internet-Verbindung werden die Rezepte im Hintergund regemässig synchronisiert.</string>
+    <string name="pref_backgroundSync_desc">Bei einer bestehenden Internet-Verbindung werden die Rezepte im Hintergund regelmässig synchronisiert.</string>
     <string name="action_settings">Settings</string>
 
 </resources>
