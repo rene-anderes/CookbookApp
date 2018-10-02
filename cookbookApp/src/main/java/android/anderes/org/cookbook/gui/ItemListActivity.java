@@ -1,20 +1,15 @@
 package android.anderes.org.cookbook.gui;
 
 import android.anderes.org.cookbook.R;
-import android.anderes.org.cookbook.ServiceLocator;
+import android.anderes.org.cookbook.ServiceLocatorForApp;
 import android.anderes.org.cookbook.database.RecipeAbstractEntity;
 import android.anderes.org.cookbook.repository.Resource;
-import android.app.FragmentManager;
+import android.anderes.org.cookbook.service.CookbookSyncService;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +56,8 @@ public class ItemListActivity extends AppCompatActivity {
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
+                final Intent i = new Intent(this, CookbookSyncService.class);
+                startService(i);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         });

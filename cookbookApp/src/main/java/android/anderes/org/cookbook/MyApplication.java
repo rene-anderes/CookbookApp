@@ -1,7 +1,6 @@
 package android.anderes.org.cookbook;
 
 import android.anderes.org.cookbook.dagger.DaggerCookbookApplicationComponent;
-import android.anderes.org.cookbook.gui.ServiceLocatorForApp;
 import android.app.Activity;
 import android.app.Application;
 

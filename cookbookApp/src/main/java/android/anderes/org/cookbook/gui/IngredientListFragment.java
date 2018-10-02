@@ -1,6 +1,7 @@
 package android.anderes.org.cookbook.gui;
 
 import android.anderes.org.cookbook.R;
+import android.anderes.org.cookbook.ServiceLocatorForApp;
 import android.anderes.org.cookbook.repository.Resource;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;

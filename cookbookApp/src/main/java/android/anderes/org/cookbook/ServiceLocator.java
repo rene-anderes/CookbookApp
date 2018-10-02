@@ -27,5 +27,5 @@ public interface ServiceLocator {
 
     IngredientRepository getIngredientRepository();
 
-    boolean isOnline();
+    AppConfiguration getAppConfiguration();
 }

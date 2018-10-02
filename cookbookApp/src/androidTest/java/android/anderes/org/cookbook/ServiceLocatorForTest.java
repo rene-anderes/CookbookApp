@@ -19,7 +19,7 @@ public class ServiceLocatorForTest implements ServiceLocator {
 
     private CookbookDatabase database;
     private final Context context;
-    private Retrofit retrofit;
+    private final Retrofit retrofit;
 
     public ServiceLocatorForTest(final Context context, final String baseHttpUrl) {
         this.context = context;
@@ -79,7 +79,8 @@ public class ServiceLocatorForTest implements ServiceLocator {
     }
 
     @Override
-    public boolean isOnline() {
-        return true;
+    public AppConfiguration getAppConfiguration() {
+        return null;
     }
+
 }

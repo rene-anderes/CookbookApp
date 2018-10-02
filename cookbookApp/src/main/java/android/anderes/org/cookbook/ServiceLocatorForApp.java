@@ -1,6 +1,5 @@
-package android.anderes.org.cookbook.gui;
+package android.anderes.org.cookbook;
 
-import android.anderes.org.cookbook.ServiceLocator;
 import android.anderes.org.cookbook.database.CookbookDatabase;
 import android.anderes.org.cookbook.database.IngredientDao;
 import android.anderes.org.cookbook.database.RecipeAbstractDao;
@@ -11,8 +10,6 @@ import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.RecipeRepository;
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import retrofit2.Retrofit;
@@ -27,14 +24,14 @@ public class ServiceLocatorForApp implements ServiceLocator {
     private static ServiceLocator instance;
     private final static String BASE_URL = "http://www.anderes.org/";
 
-    public static ServiceLocator getNewInstance(final Context context) {
+    static ServiceLocator getNewInstance(final Context context) {
         synchronized (ServiceLocatorForApp.class) {
             instance = new ServiceLocatorForApp(context, BASE_URL);
         }
         return instance;
     }
 
-    static @NonNull ServiceLocator getInstance() {
+    public static @NonNull ServiceLocator getInstance() {
         return instance;
     }
 
@@ -93,9 +90,7 @@ public class ServiceLocatorForApp implements ServiceLocator {
     }
 
     @Override
-    public boolean isOnline() {
-        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+    public AppConfiguration getAppConfiguration() {
+        return new AppUtilities(context);
     }
 }
