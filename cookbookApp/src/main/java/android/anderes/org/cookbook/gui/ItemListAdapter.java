@@ -79,7 +79,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
         return 0;
     }
 
-    void setRecipes(@NonNull final List<RecipeAbstractEntity> recipes) {
+    void setRecipes(final List<RecipeAbstractEntity> recipes) {
         this.recipes = recipes;
         notifyDataSetChanged();
     }

@@ -73,13 +73,17 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
+        viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeAbstractRepository());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         final View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         final ItemListAdapter adapter = setupRecyclerView((RecyclerView) recyclerView);
-
-        viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
-        viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeAbstractRepository());
-
 
         final Observer<Resource<List<RecipeAbstractEntity>>> observer = resource -> {
             if (resource == null) {
@@ -100,8 +104,8 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         viewModel.getRecipes().removeObservers(this);
     }
 
