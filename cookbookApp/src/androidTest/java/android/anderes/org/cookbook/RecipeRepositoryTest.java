@@ -20,20 +20,20 @@ import okhttp3.mockwebserver.MockWebServer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.fail;
 
 public class RecipeRepositoryTest {
 
-    private MockWebServer server;
-    private ServiceLocator serviceLocator;
+    private RecipeRepository repository;
     // Use this rule to instantly execute any background operation on the calling thread.
     @Rule // Stellt sicher, dass für LiveDate der richtige Thread verwendet wird
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
 
     @Before
     public void setup() {
-        server = new MockWebServer();
+        final MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse()
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .addHeader("Cache-Control", "no-cache")
@@ -46,13 +46,12 @@ public class RecipeRepositoryTest {
         }
         final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
-        serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        final ServiceLocator serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        repository = new RecipeRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeDao());
     }
 
     @Test
     public void shouldBeCorrectRecipe() throws Exception {
-        // given
-        final RecipeRepository repository = new RecipeRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeDao());
 
         // when
         final Resource<RecipeEntity> recipeResource =
@@ -72,5 +71,90 @@ public class RecipeRepositoryTest {
         assertThat(recipeResource.data.getRating(), is(5));
         assertThat(recipeResource.data.getTags(), is(notNullValue()));
         assertThat(recipeResource.data.getTags().size(), is(2));
+    }
+
+    @Test
+    public void shouldBeRecipeCollectionFromRemoteDataService() throws IOException {
+
+        // when
+        final RecipeEntity recipe = repository.getRecipeFromRemote("c0e5582e-252f-4e94-8a49-e12b4b047afb");
+
+        // then
+        assertThat(recipe, is(notNullValue()));
+        assertThat(recipe.getRecipeId(), is("c0e5582e-252f-4e94-8a49-e12b4b047afb"));
+        assertThat(recipe.getTitle(), is("Arabische Pasta"));
+        assertThat(recipe.getAddingDate(), is(1250959818424L));
+        assertThat(recipe.getEditingDate(), is(1515082740753L));
+        assertThat(recipe.getNoOfPeople(), is("2"));
+        assertThat(recipe.getPreamble(), is(notNullValue()));
+        assertThat(recipe.getPreparation(), is(notNullValue()));
+        assertThat(recipe.getRating(), is(5));
+        assertThat(recipe.getTags(), is(notNullValue()));
+        assertThat(recipe.getTags().size(), is(2));
+
+    }
+
+
+    @Test
+    public void shouldBeNoDataFromDatabase() {
+
+        //when
+        final RecipeEntity recipe = repository.getRecipeFromDatabase("c0e5582e-252f-4e94-8a49-e12b4b047afb");
+
+        // then
+        assertThat(recipe, is(nullValue()));
+    }
+
+    @Test
+    public void shuoldBeCorrectSaveNewData() {
+
+        // when
+        repository.saveDataToDatabase(createEntity());
+
+        // then
+        final RecipeEntity recipe = repository.getRecipeFromDatabase("987654321");
+        assertThat(recipe, is(notNullValue()));
+        assertThat(recipe.getRecipeId(), is("987654321"));
+        assertThat(recipe.getTitle(), is("all 4 one"));
+        assertThat(recipe.getAddingDate(), is(1250959818424L));
+        assertThat(recipe.getEditingDate(), is(1515082740753L));
+        assertThat(recipe.getNoOfPeople(), is("2"));
+        assertThat(recipe.getPreamble(), is(nullValue()));
+        assertThat(recipe.getPreparation(), is("... ist ganz einfach ..."));
+    }
+
+    @Test
+    public void shuoldBeCorrectSaveExistsData() {
+
+        // given
+        repository.saveDataToDatabase(createEntity());
+        final RecipeEntity recipe = repository.getRecipeFromDatabase("987654321");
+
+        // when
+        recipe.setPreparation("... ist noch viel einfacher ...");
+        repository.saveDataToDatabase(recipe);
+
+        // then
+        final RecipeEntity updatedRecipe = repository.getRecipeFromDatabase("987654321");
+
+        assertThat(updatedRecipe, is(notNullValue()));
+        assertThat(updatedRecipe.getRecipeId(), is("987654321"));
+        assertThat(updatedRecipe.getTitle(), is("all 4 one"));
+        assertThat(updatedRecipe.getAddingDate(), is(1250959818424L));
+        assertThat(updatedRecipe.getEditingDate(), is(1515082740753L));
+        assertThat(updatedRecipe.getNoOfPeople(), is("2"));
+        assertThat(updatedRecipe.getPreamble(), is(nullValue()));
+        assertThat(updatedRecipe.getPreparation(), is("... ist noch viel einfacher ..."));
+    }
+
+    private RecipeEntity createEntity() {
+        final RecipeEntity entity = new RecipeEntity();
+        entity.setRecipeId("987654321");
+        entity.setTitle("all 4 one");
+        entity.setNoOfPeople("2");
+        entity.setPreparation("... ist ganz einfach ...");
+        entity.setAddingDate(1250959818424L);
+        entity.setEditingDate(1515082740753L);
+        return entity;
     }
 }

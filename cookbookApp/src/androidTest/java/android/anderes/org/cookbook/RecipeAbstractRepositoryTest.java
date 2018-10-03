@@ -11,7 +11,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -137,11 +136,12 @@ public class RecipeAbstractRepositoryTest {
         recipes.add(createRecipeAbstractEntity());
 
         // when
-        repository.updateAllData(recipes);
+        repository.updateAllDataInDatabase(recipes);
 
         // then
         final List<RecipeAbstractEntity> recipesFromDb = repository.getRecipeCollectionFromDatabase();
         assertThat(recipesFromDb, is(notNullValue()));
         assertThat(recipes.size(), is(1));
     }
+
 }

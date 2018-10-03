@@ -60,6 +60,13 @@ public class RetrofitDataSourceTest {
         // then
         assertThat(list, is(not(nullValue())));
         assertThat(list.size(), is(2));
+        for (RecipeAbstract r : list) {
+            assertThat(r.getId(), is(not(nullValue())));
+            assertThat(r.getTitle(), is(not(nullValue())));
+            assertThat(r.getTitle().length(), is(greaterThan(1)));
+            assertThat(r.getEditingDate(), is(not(nullValue())));
+            assertThat(r.getEditingDate(), is(greaterThan(1L)));
+        }
     }
 
     @Test

@@ -59,6 +59,7 @@ public class RecipeAbstractRepository {
      * Liefert die Kurzform der Rezepte von der Remote Data Source.
      * Kein Update der lokalen Datenbank und die Methode wird synchron ausgeführt.
      */
+    @NonNull
     public List<RecipeAbstractEntity> getRecipeCollectionFromRemote() throws IOException {
         try {
             final List<RecipeAbstract> recipes = service.getRecipeAbstract().blockingFirst(new ArrayList<>());
@@ -87,10 +88,15 @@ public class RecipeAbstractRepository {
      * und die übergebene Liste von Rezpten wird in die Datenbank geschrieben.
      * Diese Operationen Löschen und Schreiben werden in einer Transaktion und synchron ausgeführt.
      */
-    public void updateAllData(@NonNull final List<RecipeAbstractEntity> recipes) {
+    public void updateAllDataInDatabase(@NonNull final List<RecipeAbstractEntity> recipes) {
         recipeAbstractDao.updateData(recipes);
     }
 
+    /**
+     * Es werden die Daten aus der Datenbank gelesen.
+     * Die Methode wird synchron aufgerufen.
+     */
+    @NonNull
     public List<RecipeAbstractEntity> getRecipeCollectionFromDatabase() {
         return recipeAbstractDao.getRecipeAbstractCollection();
     }

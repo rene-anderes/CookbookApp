@@ -9,7 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 
+import java.io.IOException;
+import java.util.NoSuchElementException;
+
 import io.reactivex.Observable;
+import retrofit2.HttpException;
 
 public class RecipeRepository {
     private final RecipeService service;
@@ -26,17 +30,7 @@ public class RecipeRepository {
 
             @Override
             protected void saveCallResult(@NonNull Recipe data) {
-                final RecipeEntity entity = new RecipeEntity();
-                entity.setRecipeId(data.getId());
-                entity.setTitle(data.getTitle());
-                entity.setTags(data.getTags());
-                entity.setAddingDate(data.getAddingDate());
-                entity.setEditingDate(data.getEditingDate());
-                entity.setRating(data.getRating());
-                entity.setPreamble(data.getPreamble());
-                entity.setPreparation(data.getPreparation());
-                entity.setNoOfPeople(data.getNoOfPeople());
-                recipeDao.insert(entity);
+                recipeDao.insert(mapToEntity(data));
             }
 
             @Override
@@ -56,5 +50,56 @@ public class RecipeRepository {
                 return service.getRecipe(recipeId);
             }
         }.getAsLiveData();
+    }
+
+    /**
+     * Liefert ein Rezepte von der Remote Data Source.
+     * Kein Update der lokalen Datenbank und die Methode wird synchron ausgeführt.
+     */
+    @NonNull
+    public RecipeEntity getRecipeFromRemote(@NonNull final String recipeId) throws IOException {
+        try {
+            final Recipe recipe = service.getRecipe(recipeId).blockingSingle();
+            return mapToEntity(recipe);
+        } catch (HttpException | NoSuchElementException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    @NonNull
+    private RecipeEntity mapToEntity(@NonNull final Recipe data) {
+        final RecipeEntity entity = new RecipeEntity();
+        entity.setRecipeId(data.getId());
+        entity.setTitle(data.getTitle());
+        entity.setTags(data.getTags());
+        entity.setAddingDate(data.getAddingDate());
+        entity.setEditingDate(data.getEditingDate());
+        entity.setRating(data.getRating());
+        entity.setPreamble(data.getPreamble());
+        entity.setPreparation(data.getPreparation());
+        entity.setNoOfPeople(data.getNoOfPeople());
+        return entity;
+    }
+
+    /**
+     * Es werden die Daten aus der Datenbank gelesen.
+     * Die Methode wird synchron aufgerufen.
+     */
+    @Nullable
+    public RecipeEntity getRecipeFromDatabase(@NonNull final String recipeId) {
+        return recipeDao.getRecipeById(recipeId);
+    }
+
+    /**
+     * Speichert die Daten in der Datenbank. Existiert der Datensatz noch nicht
+     * (anhand Primery Key) so wird er angelegt, sonst aktualisiert.
+     */
+    public void saveDataToDatabase(@NonNull final RecipeEntity entity) {
+        final RecipeEntity databaseRecipe = recipeDao.getRecipeById(entity.getRecipeId());
+        if (databaseRecipe == null) {
+            recipeDao.insert(entity);
+        } else {
+            recipeDao.update(entity);
+        }
     }
 }
