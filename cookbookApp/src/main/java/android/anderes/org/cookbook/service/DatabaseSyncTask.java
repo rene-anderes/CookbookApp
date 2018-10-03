@@ -2,7 +2,6 @@ package android.anderes.org.cookbook.service;
 
 import android.anderes.org.cookbook.AppConfiguration;
 import android.anderes.org.cookbook.database.RecipeAbstractEntity;
-import android.anderes.org.cookbook.database.RecipeEntity;
 import android.anderes.org.cookbook.repository.IngredientRepository;
 import android.anderes.org.cookbook.repository.RecipeAbstractRepository;
 import android.anderes.org.cookbook.repository.RecipeRepository;
@@ -21,10 +20,10 @@ public class DatabaseSyncTask extends AsyncTask<Void, Void, Void> {
     private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
 
-    public DatabaseSyncTask(@NonNull final RecipeAbstractRepository recipeAbstractRepository,
-                            @NonNull final RecipeRepository recipeRepository,
-                            @NonNull final IngredientRepository ingredientRepository,
-                            @NonNull final AppConfiguration configuration) {
+    DatabaseSyncTask(@NonNull final RecipeAbstractRepository recipeAbstractRepository,
+                        @NonNull final RecipeRepository recipeRepository,
+                        @NonNull final IngredientRepository ingredientRepository,
+                        @NonNull final AppConfiguration configuration) {
         this.repository = recipeAbstractRepository;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -39,16 +38,11 @@ public class DatabaseSyncTask extends AsyncTask<Void, Void, Void> {
             repository.updateAllDataInDatabase(entities);
             if(configuration.isFullSync()) {
                 Log.i("Sync", "Full-Sync ist aktiviert.");
-                for (RecipeAbstractEntity entity : entities) {
-                    if(recipeRepository.isSyncNecessary(entity.getRecipeId(), entity.getLastUpdate())) {
-                        recipeRepository.updateAllDataInDatabase(entity.getRecipeId());
-                        ingredientRepository.updateAllDataInDatabase(entity.getRecipeId());
-                        Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
-                    } else {
-                        Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
-                    }
-                }
+                process(entities);
+            } else {
+                Log.i("Sync", "Full-Sync ist deaktiviert.");
             }
+
             final List<String> recipeIds = new ArrayList<>();
             for (RecipeAbstractEntity recipeAbstractEntity : entities) {
                 recipeIds.add(recipeAbstractEntity.getRecipeId());
@@ -56,11 +50,23 @@ public class DatabaseSyncTask extends AsyncTask<Void, Void, Void> {
             recipeRepository.deleteOrphan(recipeIds);
             ingredientRepository.deleteOrphan(recipeIds);
             Log.d("Sync", "Verwaiste Einträge konsolidiert.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("Sync", "Sync Error: " + e.getMessage());
         }
         Log.i("Sync", "Sync beendet.");
         return null;
+    }
+
+    private void process(List<RecipeAbstractEntity> entities) throws IOException {
+        for (RecipeAbstractEntity entity : entities) {
+            if(recipeRepository.isSyncNecessary(entity.getRecipeId(), entity.getLastUpdate())) {
+                recipeRepository.updateAllDataInDatabase(entity.getRecipeId());
+                ingredientRepository.updateAllDataInDatabase(entity.getRecipeId());
+                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
+            } else {
+                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
+            }
+        }
     }
 
 }

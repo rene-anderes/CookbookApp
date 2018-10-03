@@ -1,12 +1,19 @@
 package android.anderes.org.cookbook;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import static java.lang.Boolean.FALSE;
 
 public class AppUtilities implements AppConfiguration {
 
     private final Context context;
+    private final static String PREF_FULL_SYNC = "pref_fullSync";
+    private final static String REF_BACKGROUND_SYNC = "pref_backgroundSync";
 
     public AppUtilities(Context context) {
         this.context = context;
@@ -21,11 +28,17 @@ public class AppUtilities implements AppConfiguration {
 
     @Override
     public boolean isFullSync() {
-        return true;
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final Boolean fullSync = sharedPrefs.getBoolean(PREF_FULL_SYNC, FALSE);
+        Log.d("Sync", "SharedPreferences - Key: " + PREF_FULL_SYNC + " - Result: " + fullSync);
+        return fullSync;
     }
 
     @Override
     public boolean isBackgroundSync() {
-        return false;
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final Boolean backgroundSync = sharedPrefs.getBoolean(REF_BACKGROUND_SYNC, FALSE);
+        Log.d("Sync", "SharedPreferences - Key: " + REF_BACKGROUND_SYNC + " - Result: " + backgroundSync);
+        return backgroundSync;
     }
 }
