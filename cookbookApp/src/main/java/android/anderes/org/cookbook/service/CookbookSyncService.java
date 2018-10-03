@@ -10,6 +10,7 @@ import android.anderes.org.cookbook.repository.RecipeRepository;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public class CookbookSyncService extends IntentService {
 
@@ -27,8 +28,11 @@ public class CookbookSyncService extends IntentService {
                 ServiceLocatorForApp.getInstance().getIngredientRepository();
         final AppConfiguration config = ServiceLocatorForApp.getInstance().getAppConfiguration();
         if (config.isOnline()) {
+            Log.d("Sync", "Internet-Verbindung vorhanden.");
             final DatabaseSyncTask task = new DatabaseSyncTask(recipeAbstractRepository, recipeRepository, ingredientRepository, config);
             task.execute();
+        } else {
+            Log.i("Sync", "Keine Internet-Verbindung.");
         }
     }
 }

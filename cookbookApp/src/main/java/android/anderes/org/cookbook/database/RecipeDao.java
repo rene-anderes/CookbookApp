@@ -26,9 +26,13 @@ public interface RecipeDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(RecipeEntity entity);
 
-    @Query("SELECT EXISTS(SELECT * FROM recipe_table WHERE recipeId != :id OR editingDate < :updateDate)")
+    @Query("SELECT EXISTS(SELECT recipeId FROM recipe_table WHERE recipeId = :id AND editingDate < :updateDate)")
     boolean isSyncNecessary(String id, long updateDate);
 
     @Query("DELETE FROM recipe_table WHERE recipeId NOT IN(:recipeIds)")
     void deleteOrphan(List<String> recipeIds);
+
+    @Query("SELECT EXISTS(SELECT recipeId FROM recipe_table WHERE recipeId = :id)")
+    boolean isExists(String id);
+
 }

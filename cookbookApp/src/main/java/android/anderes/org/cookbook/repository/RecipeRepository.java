@@ -109,7 +109,7 @@ public class RecipeRepository {
      * notwendig ist. Das Datum wird als long übergeben.
      */
     public boolean isSyncNecessary(String recipeId, long updateDate) {
-        return recipeDao.isSyncNecessary(recipeId, updateDate);
+        return !recipeDao.isExists(recipeId) || recipeDao.isSyncNecessary(recipeId, updateDate);
     }
 
     /**

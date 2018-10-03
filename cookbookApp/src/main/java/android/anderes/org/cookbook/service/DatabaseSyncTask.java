@@ -33,15 +33,19 @@ public class DatabaseSyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... Void) {
-
+        Log.i("Sync", "Sync gestartet ...");
         try {
             final List<RecipeAbstractEntity> entities = repository.getRecipeCollectionFromRemote();
             repository.updateAllDataInDatabase(entities);
             if(configuration.isFullSync()) {
+                Log.i("Sync", "Full-Sync ist aktiviert.");
                 for (RecipeAbstractEntity entity : entities) {
                     if(recipeRepository.isSyncNecessary(entity.getRecipeId(), entity.getLastUpdate())) {
                         recipeRepository.updateAllDataInDatabase(entity.getRecipeId());
                         ingredientRepository.updateAllDataInDatabase(entity.getRecipeId());
+                        Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
+                    } else {
+                        Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
                     }
                 }
             }
@@ -51,11 +55,11 @@ public class DatabaseSyncTask extends AsyncTask<Void, Void, Void> {
             }
             recipeRepository.deleteOrphan(recipeIds);
             ingredientRepository.deleteOrphan(recipeIds);
-
+            Log.d("Sync", "Verwaiste Einträge konsolidiert.");
         } catch (IOException e) {
-            Log.e("Sync", e.getMessage());
+            Log.e("Sync", "Sync Error: " + e.getMessage());
         }
-
+        Log.i("Sync", "Sync beendet.");
         return null;
     }
 
