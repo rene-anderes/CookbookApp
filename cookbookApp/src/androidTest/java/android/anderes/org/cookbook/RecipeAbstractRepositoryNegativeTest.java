@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verify;
 public class RecipeAbstractRepositoryNegativeTest {
 
     private MockWebServer server;
-    private ServiceLocator serviceLocator;
+    private RecipeAbstractRepository repository;
     // Use this rule to instantly execute any background operation on the calling thread.
     @Rule // Stellt sicher, dass für LiveDate der richtige Thread verwendet wird
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
@@ -52,7 +52,9 @@ public class RecipeAbstractRepositoryNegativeTest {
         }
         final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
-        serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        final ServiceLocator serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        repository = new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
+
     }
 
     @After
@@ -66,9 +68,7 @@ public class RecipeAbstractRepositoryNegativeTest {
 
     @Test
     public void shouldBeDataError() throws InterruptedException {
-        // given
-        final RecipeAbstractRepository repository =
-                new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
+
         // when
         final Resource<List<RecipeAbstractEntity>> recipesResource =
                 LiveDataTestUtil.getValue(repository.getRecipes(), 2);
@@ -81,4 +81,12 @@ public class RecipeAbstractRepositoryNegativeTest {
 
     }
 
+    @Test(expected = IOException.class)
+    public void shouldBeRecipeCollectionFromRemoteDataService() throws IOException {
+
+        // when
+        repository.getRecipeCollectionFromRemote();
+
+        // then throw exception
+    }
 }

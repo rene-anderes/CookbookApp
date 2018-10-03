@@ -9,9 +9,12 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import retrofit2.HttpException;
 
 public class RecipeAbstractRepository {
 
@@ -29,14 +32,7 @@ public class RecipeAbstractRepository {
 
             @Override
             protected void saveCallResult(@NonNull List<RecipeAbstract> data) {
-                recipeAbstractDao.deleteAll();
-                for (RecipeAbstract r : data) {
-                    final RecipeAbstractEntity entity = new RecipeAbstractEntity();
-                    entity.setRecipeId(r.getId());
-                    entity.setTitle(r.getTitle());
-                    entity.setLastUpdate(r.getEditingDate());
-                    recipeAbstractDao.insert(entity);
-                }
+                recipeAbstractDao.updateData(mapToEntities(data));
             }
 
             @Override
@@ -59,4 +55,43 @@ public class RecipeAbstractRepository {
         }.getAsLiveData();
     }
 
+    /**
+     * Liefert die Kurzform der Rezepte von der Remote Data Source.
+     * Kein Update der lokalen Datenbank und die Methode wird synchron ausgeführt.
+     */
+    public List<RecipeAbstractEntity> getRecipeCollectionFromRemote() throws IOException {
+        try {
+            final List<RecipeAbstract> recipes = service.getRecipeAbstract().blockingFirst(new ArrayList<>());
+            return mapToEntities(recipes);
+        } catch (HttpException e) {
+            throw new IOException(e.getMessage());
+        }
+
+    }
+
+    @NonNull
+    private List<RecipeAbstractEntity> mapToEntities(@NonNull final List<RecipeAbstract> recipes) {
+        final List<RecipeAbstractEntity> data = new ArrayList<>(recipes.size());
+        for (RecipeAbstract r : recipes) {
+            final RecipeAbstractEntity entity = new RecipeAbstractEntity();
+            entity.setRecipeId(r.getId());
+            entity.setTitle(r.getTitle());
+            entity.setLastUpdate(r.getEditingDate());
+            data.add(entity);
+        }
+        return data;
+    }
+
+    /**
+     * Es werden alle Daten in der lokalen Datenbank gelöscht
+     * und die übergebene Liste von Rezpten wird in die Datenbank geschrieben.
+     * Diese Operationen Löschen und Schreiben werden in einer Transaktion und synchron ausgeführt.
+     */
+    public void updateAllData(@NonNull final List<RecipeAbstractEntity> recipes) {
+        recipeAbstractDao.updateData(recipes);
+    }
+
+    public List<RecipeAbstractEntity> getRecipeCollectionFromDatabase() {
+        return recipeAbstractDao.getRecipeAbstractCollection();
+    }
 }

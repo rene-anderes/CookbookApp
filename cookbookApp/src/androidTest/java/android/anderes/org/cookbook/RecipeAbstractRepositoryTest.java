@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
 public class RecipeAbstractRepositoryTest {
 
     private MockWebServer server;
-    private ServiceLocator serviceLocator;
+    private RecipeAbstractRepository repository;
     // Use this rule to instantly execute any background operation on the calling thread.
     @Rule // Stellt sicher, dass für LiveDate der richtige Thread verwendet wird
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
@@ -63,14 +63,16 @@ public class RecipeAbstractRepositoryTest {
         }
         final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
-        serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        final ServiceLocator serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        repository = new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
+
     }
 
     private RecipeAbstractEntity createRecipeAbstractEntity() {
         RecipeAbstractEntity r = new RecipeAbstractEntity();
         r.setRecipeId("4135431253");
         r.setLastUpdate(243123431L);
-        r.setTitle("Arabische Pasta");
+        r.setTitle("all 4 one");
         return r;
     }
 
@@ -86,10 +88,7 @@ public class RecipeAbstractRepositoryTest {
     @Test
     public void shouldBeRecipeCollection() throws InterruptedException {
 
-        // given
-        final RecipeAbstractRepository repository =
-                new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
-        // when
+      // when
         final Resource<List<RecipeAbstractEntity>> recipesResource =
                 LiveDataTestUtil.getValue(repository.getRecipes(), 2);
 
@@ -109,9 +108,7 @@ public class RecipeAbstractRepositoryTest {
 
     @Test
     public void shouldBeRecipeCollectionObserver() throws InterruptedException {
-        // given
-        final RecipeAbstractRepository repository =
-                new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
+
         // when
         repository.getRecipes().observeForever(observer);
 
@@ -119,5 +116,32 @@ public class RecipeAbstractRepositoryTest {
 
         // then
         verify(observer, times(2)).onChanged(any());
+    }
+
+    @Test
+    public void shouldBeRecipeCollectionFromRemoteDataService() throws IOException {
+
+        // when
+        final List<RecipeAbstractEntity> recipes = repository.getRecipeCollectionFromRemote();
+
+        // then
+        assertThat(recipes, is(notNullValue()));
+        assertThat(recipes.size(), is(2));
+
+    }
+
+    @Test
+    public void shouldBeUpdateDatabase() {
+        // given
+        final List<RecipeAbstractEntity> recipes = new ArrayList<>(1);
+        recipes.add(createRecipeAbstractEntity());
+
+        // when
+        repository.updateAllData(recipes);
+
+        // then
+        final List<RecipeAbstractEntity> recipesFromDb = repository.getRecipeCollectionFromDatabase();
+        assertThat(recipesFromDb, is(notNullValue()));
+        assertThat(recipes.size(), is(1));
     }
 }
