@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:id="@+id/pref_fullSync_id"
+        android:defaultValue="false"
+        android:key="pref_fullSync"
+        android:summary="@string/pref_fullSync_desc"
+        android:title="@string/pref_fullSync" />
+    <CheckBoxPreference
+        android:id="@+id/pref_backgroundSync_id"
+        android:defaultValue="false"
+        android:key="pref_backgroundSync"
+        android:summary="@string/pref_backgroundSync_desc"
+        android:title="@string/pref_backgroundSync" />
+</PreferenceScreen>
