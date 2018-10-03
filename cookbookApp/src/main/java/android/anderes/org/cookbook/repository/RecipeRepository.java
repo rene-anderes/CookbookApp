@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import io.reactivex.Observable;
@@ -101,5 +102,20 @@ public class RecipeRepository {
         } else {
             recipeDao.update(entity);
         }
+    }
+
+    /**
+     * Überprüft, ob eine Synchronisation anhand des Aktualisierungsdatum
+     * notwendig ist. Das Datum wird als long übergeben.
+     */
+    public boolean isSyncNecessary(String recipeId, long updateDate) {
+        return recipeDao.isSyncNecessary(recipeId, updateDate);
+    }
+
+    /**
+     * Löscht alle Rezepte deren Id in der Liste NICHT vorkommen.
+     */
+    public void deleteOrphan(final List<String> recipeIds) {
+        recipeDao.deleteOrphan(recipeIds);
     }
 }

@@ -10,9 +10,10 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -74,6 +75,25 @@ public class RecipeRepositoryTest {
     }
 
     @Test
+    public void checkIsSyncNecessary() throws Exception {
+
+        // given
+        LiveDataTestUtil.getValue(repository.getRecipe("c0e5582e-252f-4e94-8a49-e12b4b047afb"), 2);
+
+        // when
+        boolean isNecessary = repository.isSyncNecessary("c0e5582e-252f-4e94-8a49-e12b4b047afb", 1515082740753L);
+        // then
+        assertThat(isNecessary, is(false));
+
+        // when
+        isNecessary = repository.isSyncNecessary("c0e5582e-252f-4e94-8a49-e12b4b047afb", 1515082740754L);
+        // then
+        assertThat(isNecessary, is(true));
+
+    }
+
+
+    @Test
     public void shouldBeRecipeCollectionFromRemoteDataService() throws IOException {
 
         // when
@@ -93,7 +113,6 @@ public class RecipeRepositoryTest {
         assertThat(recipe.getTags().size(), is(2));
 
     }
-
 
     @Test
     public void shouldBeNoDataFromDatabase() {
@@ -129,6 +148,7 @@ public class RecipeRepositoryTest {
         // given
         repository.saveDataToDatabase(createEntity());
         final RecipeEntity recipe = repository.getRecipeFromDatabase("987654321");
+        assert recipe != null;
 
         // when
         recipe.setPreparation("... ist noch viel einfacher ...");
@@ -145,6 +165,32 @@ public class RecipeRepositoryTest {
         assertThat(updatedRecipe.getNoOfPeople(), is("2"));
         assertThat(updatedRecipe.getPreamble(), is(nullValue()));
         assertThat(updatedRecipe.getPreparation(), is("... ist noch viel einfacher ..."));
+    }
+
+    @Test
+    public void shouldBeRemoveOrphan() {
+        // given
+        repository.saveDataToDatabase(createEntity());
+        final List<String> recipeIds = Arrays.asList("123445678", "759347569");
+
+        // when
+        repository.deleteOrphan(recipeIds);
+
+        // then
+        assertThat(repository.getRecipeFromDatabase("987654321"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldBeNotRemoveOrphan() {
+        // given
+        repository.saveDataToDatabase(createEntity());
+        final List<String> recipeIds = Arrays.asList("987654321", "759347569");
+
+        // when
+        repository.deleteOrphan(recipeIds);
+
+        // then
+        assertThat(repository.getRecipeFromDatabase("987654321"), is(notNullValue()));
     }
 
     private RecipeEntity createEntity() {

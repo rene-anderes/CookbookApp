@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -20,21 +21,21 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.fail;
 
 public class IngredientRepositoryTest {
 
-    private MockWebServer server;
-    private ServiceLocator serviceLocator;
+    private IngredientRepository repository;
     // Use this rule to instantly execute any background operation on the calling thread.
     @Rule // Stellt sicher, dass für LiveDate der richtige Thread verwendet wird
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
 
     @Before
     public void setup() {
-        server = new MockWebServer();
+        final MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse()
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .addHeader("Cache-Control", "no-cache")
@@ -47,13 +48,12 @@ public class IngredientRepositoryTest {
         }
         final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
-        serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        final ServiceLocator serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        repository = new IngredientRepository(serviceLocator.getRecipeService(), serviceLocator.getIngredientDao());
     }
 
     @Test
     public void shouldBeCorrectIngredients() throws Exception {
-        // given
-        final IngredientRepository repository = new IngredientRepository(serviceLocator.getRecipeService(), serviceLocator.getIngredientDao());
 
         // when
         final Resource<List<IngredientEntity>> ingredientsResource =
@@ -65,5 +65,43 @@ public class IngredientRepositoryTest {
         assertThat(ingredientsResource.data, is(notNullValue()));
         assertThat(ingredientsResource.data.size(), is(11));
 
+    }
+
+    @Test
+    public void shouldBeRemoveOrphan() throws InterruptedException {
+        // given
+        LiveDataTestUtil.getValue(repository.getIngredients("c0e5582e-252f-4e94-8a49-e12b4b047afb"), 2);
+        final List<String> recipeIds = Arrays.asList("123456789");
+
+        // when
+        int count = repository.deleteOrphan(recipeIds);
+
+        // then
+        assertThat(count, is(0));
+    }
+
+    @Test
+    public void shouldBeUpdateIngredients() throws InterruptedException {
+        // given
+        final Resource<List<IngredientEntity>> list =
+                LiveDataTestUtil.getValue(repository.getIngredients("c0e5582e-252f-4e94-8a49-e12b4b047afb"), 2);
+
+        // when
+        int count = repository.updateAllDataInDatabase("c0e5582e-252f-4e94-8a49-e12b4b047afb", createIngredients());
+        assertThat(count, is(2));
+    }
+
+    private List<IngredientEntity> createIngredients() {
+        final IngredientEntity entity_1 = new IngredientEntity();
+        entity_1.setPortion("1");
+        entity_1.setDescription("Tomaten");
+        entity_1.setComment("Bio");
+        entity_1.setRecipeId("c0e5582e-252f-4e94-8a49-e12b4b047afb");
+        final IngredientEntity entity_2 = new IngredientEntity();
+        entity_2.setPortion("2");
+        entity_2.setDescription("Aubergine");
+        entity_2.setComment("Bio");
+        entity_2.setRecipeId("c0e5582e-252f-4e94-8a49-e12b4b047afb");
+        return Arrays.asList(entity_1, entity_2);
     }
 }

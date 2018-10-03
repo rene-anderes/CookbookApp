@@ -23,6 +23,7 @@ public class DatabaseSyncTask extends AsyncTask<Void, Void, Void> {
         try {
             final List<RecipeAbstractEntity> entities = repository.getRecipeCollectionFromRemote();
             repository.updateAllDataInDatabase(entities);
+
         } catch (IOException e) {
             Log.e("Sync", e.getMessage());
         }

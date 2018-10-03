@@ -57,4 +57,13 @@ public class IngredientRepository {
             }
         }.getAsLiveData();
     }
+
+    public int deleteOrphan(List<String> recipeIds) {
+        ingredientDao.deleteOrphan(recipeIds);
+        return ingredientDao.count();
+    }
+
+    public int updateAllDataInDatabase(String recipeId, List<IngredientEntity> ingredients) {
+        return ingredientDao.updateByRecipeId(recipeId, ingredients);
+    }
 }
