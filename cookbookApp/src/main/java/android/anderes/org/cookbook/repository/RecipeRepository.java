@@ -118,4 +118,9 @@ public class RecipeRepository {
     public void deleteOrphan(final List<String> recipeIds) {
         recipeDao.deleteOrphan(recipeIds);
     }
+
+    public void updateAllDataInDatabase(String recipeId) throws IOException {
+        final RecipeEntity recipe = getRecipeFromRemote(recipeId);
+        saveDataToDatabase(recipe);
+    }
 }

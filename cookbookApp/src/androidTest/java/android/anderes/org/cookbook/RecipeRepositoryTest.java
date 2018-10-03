@@ -90,6 +90,11 @@ public class RecipeRepositoryTest {
         // then
         assertThat(isNecessary, is(true));
 
+        // when
+        isNecessary = repository.isSyncNecessary("not exits", 1515082740754L);
+        // then
+        assertThat(isNecessary, is(true));
+
     }
 
 

@@ -20,7 +20,7 @@ public abstract class IngredientDao {
     public abstract void deleteAll();
 
     @Query("SELECT * FROM ingredient_table WHERE recipeId = :recipeId ORDER BY description ASC")
-    public abstract LiveData<List<IngredientEntity>> getIngredientsForRecipe(String recipeId);
+    public abstract LiveData<List<IngredientEntity>> getIngredients(String recipeId);
 
     @Query("DELETE FROM ingredient_table WHERE recipeId NOT IN(:recipeIds)")
     public abstract void deleteOrphan(List<String> recipeIds);
@@ -48,4 +48,7 @@ public abstract class IngredientDao {
 
     @Query("SELECT COUNT(*) FROM ingredient_table WHERE recipeId = :recipeId")
     abstract int countByRecipeId(String recipeId);
+
+    @Query("SELECT * FROM ingredient_table WHERE recipeId = :recipeId ORDER BY description ASC")
+    public abstract List<IngredientEntity> getIngredientsByRecipeId(String recipeId);
 }

@@ -21,7 +21,7 @@ public class AppUtilities implements AppConfiguration {
 
     @Override
     public boolean isFullSync() {
-        return false;
+        return true;
     }
 
     @Override
