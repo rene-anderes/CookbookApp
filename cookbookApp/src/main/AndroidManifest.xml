@@ -39,6 +39,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="android.anderes.org.cookbook.gui.ItemListActivity"/>
         </activity>
+        <activity android:name=".gui.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".gui.ItemListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.anderes.org.cookbook.gui.ItemListActivity"/>
+        </activity>
 
         <service android:name=".service.CookbookSyncService" android:exported="false"/>
     </application>
