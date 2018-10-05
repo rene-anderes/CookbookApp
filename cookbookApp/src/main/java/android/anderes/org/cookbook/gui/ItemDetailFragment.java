@@ -22,6 +22,12 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 /**
  * A fragment representing a single Item detail screen.
  * This fragment is either contained in a {@link ItemListActivity}
@@ -115,10 +121,12 @@ public class ItemDetailFragment extends Fragment {
             final Spanned preamble = Html.fromHtml(recipe.getPreamble());
             ((TextView) rootView.findViewById(R.id.preamble)).setText(preamble);
         }
-        final String noOfPerson = getResources().getString(R.string.noOfPerson_item_detail, recipe.getNoOfPeople());
+        final String noOfPerson = getResources().getString(R.string.item_detail_noOfPerson, recipe.getNoOfPeople());
         ((TextView) rootView.findViewById(R.id.noOfPerson)).setText(noOfPerson);
         final Spanned preparation = Html.fromHtml(recipe.getPreparation());
         ((TextView) rootView.findViewById(R.id.preparation)).setText(preparation);
+        final String updateDate = String.format("%tc", new Date(recipe.getEditingDate()));
+        ((TextView) rootView.findViewById(R.id.update)).setText(updateDate);
         final RatingBar ratingBar = rootView.findViewById(R.id.rating);
         ratingBar.setRating(recipe.getRating());
     }

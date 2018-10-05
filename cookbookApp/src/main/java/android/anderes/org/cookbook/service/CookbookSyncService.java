@@ -1,7 +1,6 @@
 package android.anderes.org.cookbook.service;
 
 import android.anderes.org.cookbook.AppConfiguration;
-import android.anderes.org.cookbook.AppConstants;
 import android.anderes.org.cookbook.R;
 import android.anderes.org.cookbook.ServiceLocatorForApp;
 import android.anderes.org.cookbook.database.RecipeAbstractEntity;
@@ -58,7 +57,6 @@ public class CookbookSyncService extends IntentService {
             if(configuration.isFullSync()) {
                 Log.i("Sync", "Full-Sync ist aktiviert.");
                 processFullSync(entities, recipeRepository, ingredientRepository);
-                sendFinished();
             } else {
                 Log.i("Sync", "Full-Sync ist deaktiviert.");
             }
@@ -73,10 +71,11 @@ public class CookbookSyncService extends IntentService {
         } catch (Exception e) {
             Log.e("Sync", "Sync Error: " + e.getMessage());
         }
+        sendFinishedMessage();
         Log.i("Sync", "Sync beendet.");
     }
 
-    private void sendFinished() {
+    private void sendFinishedMessage() {
         final LocalBroadcastManager locBcMan = LocalBroadcastManager.getInstance(this);
         final Bundle messBundle = new Bundle();
         messBundle.putString(BROADCAST_SYNC_ACTION_KEY, getResources().getString(R.string.msg_recipes_updated));
@@ -85,7 +84,7 @@ public class CookbookSyncService extends IntentService {
         locBcMan.sendBroadcast(returnIntent);
     }
 
-    private void processFullSync(List<RecipeAbstractEntity> entities,
+    private void processFullSync(@NonNull final List<RecipeAbstractEntity> entities,
                                  @NonNull final RecipeRepository recipeRepository,
                                  @NonNull final IngredientRepository ingredientRepository) throws IOException {
 

@@ -6,8 +6,11 @@
 
     <string name="msg_recipes_updated">Daten sind aktualisiert.</string>
     <string name="msg_recipes_loading">Daten werden aktualisiert…</string>
-    <string name="noOfPerson_item_detail">Zutaten für %s Personen</string>
-    <string name="preparation_title_item_detail">Zubereitung</string>
+    <string name="item_detail_noOfPerson">Zutaten für %s Personen</string>
+    <string name="item_detail_preparation_title">Zubereitung</string>
+    <string name="item_detail_rating">Bewertung des Autors:</string>
+    <string name="item_detail_lastUpdate">Letzte Aktualisierung:</string>
+    <string name="item_detail_adding">Erfasst:</string>
     <string name="ok">OK</string>
 
     <string name="pref_fullSync">Vollständige Synchronisation</string>
