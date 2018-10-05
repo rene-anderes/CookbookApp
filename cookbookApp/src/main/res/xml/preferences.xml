@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:id="@+id/pref_fullSync_id"
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="pref_fullSync"
         android:summary="@string/pref_fullSync_desc"
         android:title="@string/pref_fullSync" />

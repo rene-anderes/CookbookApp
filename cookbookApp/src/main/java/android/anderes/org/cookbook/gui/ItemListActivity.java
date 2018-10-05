@@ -8,8 +8,10 @@ import android.anderes.org.cookbook.service.CookbookSyncService;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import dagger.android.AndroidInjection;
 
+import static android.anderes.org.cookbook.AppConstants.BROADCAST_SYNC_ACTION;
 import static android.anderes.org.cookbook.repository.Resource.*;
 
 /**
@@ -43,6 +46,14 @@ public class ItemListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private ItemListViewModel viewModel;
+    private final View.OnClickListener syncOnClick =
+            view -> {
+                final Intent i = new Intent(this, CookbookSyncService.class);
+                startService(i);
+                final SyncReceiver receiver = new SyncReceiver(view);
+                final IntentFilter intentFilter = new IntentFilter(BROADCAST_SYNC_ACTION);
+                LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +66,8 @@ public class ItemListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-                final Intent i = new Intent(this, CookbookSyncService.class);
-                startService(i);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        });
+        final FloatingActionButton syncButton = findViewById(R.id.fab);
+        syncButton.setOnClickListener(syncOnClick);
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -90,7 +96,6 @@ public class ItemListActivity extends AppCompatActivity {
             if (resource.status == Status.SUCCESS) {
                 // Update the cached copy of the recipes in the adapter.
                 adapter.setRecipes(resource.data);
-                Snackbar.make(recyclerView, R.string.msg_recipes_updated, Snackbar.LENGTH_SHORT).show();
             } else if (resource.status == Status.LOADING) {
                 Snackbar.make(recyclerView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
             } else if (resource.status == Status.ERROR) {

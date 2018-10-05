@@ -34,8 +34,6 @@ public class ItemDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    private ItemDetailViewModel viewModel;
-
     private View rootView;
 
     /**
@@ -78,7 +76,7 @@ public class ItemDetailFragment extends Fragment {
         final Activity activity = this.getActivity();
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID) && activity != null) {
             final String itemId = getArguments().getString(ARG_ITEM_ID);
-            viewModel = ViewModelProviders.of(this).get(ItemDetailViewModel.class);
+            ItemDetailViewModel viewModel = ViewModelProviders.of(this).get(ItemDetailViewModel.class);
             viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeRepository());
 
 
@@ -96,7 +94,6 @@ public class ItemDetailFragment extends Fragment {
                         appBarLayout.setTitle(resource.data.getTitle());
                     }
                     handleItemDetail(resource.data);
-                    Snackbar.make(rootView, R.string.msg_recipes_updated, Snackbar.LENGTH_SHORT).show();
                 } else if (resource.status == Resource.Status.LOADING) {
                     Snackbar.make(rootView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
                 } else if (resource.status == Resource.Status.ERROR) {

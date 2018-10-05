@@ -4,8 +4,8 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_about">Über diese App</string>
 
-    <string name="msg_recipes_updated">Rezepte sind aktualisiert.</string>
-    <string name="msg_recipes_loading">Rezepte werden aktualisiert…</string>
+    <string name="msg_recipes_updated">Daten sind aktualisiert.</string>
+    <string name="msg_recipes_loading">Daten werden aktualisiert…</string>
     <string name="noOfPerson_item_detail">Zutaten für %s Personen</string>
     <string name="preparation_title_item_detail">Zubereitung</string>
     <string name="ok">OK</string>
