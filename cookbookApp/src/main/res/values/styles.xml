@@ -11,6 +11,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="MyRatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorAccent">@color/anderes_orange</item>
+    </style>
+
     <!-- The default font for RecyclerView items is too small.
                 The margin is a simple delimiter between the words. -->
     <style name="recipe_title">
