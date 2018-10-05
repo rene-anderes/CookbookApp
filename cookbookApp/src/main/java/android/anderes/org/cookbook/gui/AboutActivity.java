@@ -15,9 +15,9 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
 
         try {
-            String versionName = this.getPackageManager()
-                    .getPackageInfo(this.getPackageName(), 0).versionName;
-            ((TextView)findViewById(R.id.about_version)).setText(versionName);
+            final String versionName = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+            final String versionText = getResources().getString(R.string.about_version, versionName);
+            ((TextView)findViewById(R.id.about_version)).setText(versionText);
         } catch (PackageManager.NameNotFoundException e) {
             Log.w("About", e.getMessage());
         }
