@@ -18,7 +18,7 @@ public class MyApplication extends Application implements HasActivityInjector {
     @Override
     public void onCreate() {
         super.onCreate();
-        ServiceLocatorForApp.getNewInstance(this);
+        ServiceLocatorForApp.getNewInstance(this).getAppConfiguration().loadDefaultValuesForSettings();
         DaggerCookbookApplicationComponent.builder().create(this).inject(this);
 
     }

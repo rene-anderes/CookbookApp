@@ -6,6 +6,8 @@
 
     <string name="msg_recipes_updated">Daten sind aktualisiert.</string>
     <string name="msg_recipes_loading">Daten werden aktualisiert…</string>
+    <string name="msg_recipes_error">Daten konnten nicht aktualisiert werden. Keine Internet-Verbindung?</string>
+    <string name="msg_no_recipes_error">Daten konnten nicht aktualisiert werden. Bitte stelle sicher, dass eine Internet-Verbindung vorhanden ist und starte die App neu.</string>
     <string name="item_detail_noOfPerson">Zutaten für %s Personen</string>
     <string name="item_detail_preparation_title">Zubereitung</string>
     <string name="item_detail_rating">Bewertung des Autors:</string>

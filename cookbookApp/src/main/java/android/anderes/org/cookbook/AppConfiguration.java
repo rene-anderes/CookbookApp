@@ -7,4 +7,6 @@ public interface AppConfiguration {
     boolean isFullSync();
 
     boolean isBackgroundSync();
+
+    boolean loadDefaultValuesForSettings();
 }

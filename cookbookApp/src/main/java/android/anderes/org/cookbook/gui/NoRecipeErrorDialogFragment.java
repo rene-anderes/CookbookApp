@@ -9,13 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-public class RecipeInfoDialogFragment extends DialogFragment {
+public class NoRecipeErrorDialogFragment extends DialogFragment {
 
     @Override @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Test")
+        builder.setMessage(R.string.msg_no_recipes_error)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!

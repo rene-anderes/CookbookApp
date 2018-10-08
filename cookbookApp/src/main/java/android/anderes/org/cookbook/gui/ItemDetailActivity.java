@@ -29,11 +29,13 @@ public class ItemDetailActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
+        /*
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            RecipeInfoDialogFragment dialog = new RecipeInfoDialogFragment();
+            NoRecipeErrorDialogFragment dialog = new NoRecipeErrorDialogFragment();
             dialog.show(getSupportFragmentManager(), "recipeInfo");
         });
+        */
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();

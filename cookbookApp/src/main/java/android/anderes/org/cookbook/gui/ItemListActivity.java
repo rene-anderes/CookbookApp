@@ -111,7 +111,11 @@ public class ItemListActivity extends AppCompatActivity {
                 Snackbar.make(recyclerView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
             } else if (resource.status == Status.ERROR) {
                 Log.v("GUI", resource.status + " - " + resource.message);
-                Snackbar.make(recyclerView, resource.status + " - " + resource.message, Snackbar.LENGTH_INDEFINITE).show();
+                Snackbar.make(recyclerView, R.string.msg_recipes_error, Snackbar.LENGTH_INDEFINITE).show();
+                if (adapter.getItemCount() <= 0) {
+                    NoRecipeErrorDialogFragment dialog = new NoRecipeErrorDialogFragment();
+                    dialog.show(getSupportFragmentManager(), "NoRecipesError");
+                }
             }
         };
         viewModel.getRecipes().observe(this, observer);

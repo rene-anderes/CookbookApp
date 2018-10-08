@@ -7,15 +7,16 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.*;
 
-public class AppUtilities implements AppConfiguration {
+class AppUtilities implements AppConfiguration {
 
     private final Context context;
     private final static String PREF_FULL_SYNC = "pref_fullSync";
     private final static String REF_BACKGROUND_SYNC = "pref_backgroundSync";
+    private final static String REF_FIRST_START = "pref_first_start";
 
-    public AppUtilities(Context context) {
+    AppUtilities(Context context) {
         this.context = context;
     }
 
@@ -40,5 +41,11 @@ public class AppUtilities implements AppConfiguration {
         final Boolean backgroundSync = sharedPrefs.getBoolean(REF_BACKGROUND_SYNC, FALSE);
         Log.d("Sync", "SharedPreferences - Key: " + REF_BACKGROUND_SYNC + " - Result: " + backgroundSync);
         return backgroundSync;
+    }
+
+    @Override
+    public boolean loadDefaultValuesForSettings() {
+        PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
+        return false;
     }
 }

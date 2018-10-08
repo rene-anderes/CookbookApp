@@ -104,7 +104,7 @@ public class ItemDetailFragment extends Fragment {
                     Snackbar.make(rootView, R.string.msg_recipes_loading, Snackbar.LENGTH_SHORT).show();
                 } else if (resource.status == Resource.Status.ERROR) {
                     Log.v("GUI", resource.status + " - " + resource.message);
-                    Snackbar.make(rootView, resource.status + " - " + resource.message, Snackbar.LENGTH_INDEFINITE).show();
+                    Snackbar.make(rootView, R.string.msg_recipes_error, Snackbar.LENGTH_INDEFINITE).show();
                 }
 
             });
