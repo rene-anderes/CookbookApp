@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.anderes.org.cookbook.AppConstants.BROADCAST_SYNC_ACTION;
-import static android.anderes.org.cookbook.AppConstants.BROADCAST_SYNC_ACTION_KEY;
+import static android.anderes.org.cookbook.AppConstants.BROADCAST_SYNC_MESSAGE_KEY;
 
 public class CookbookSyncService extends IntentService {
 
@@ -59,6 +59,8 @@ public class CookbookSyncService extends IntentService {
                 processFullSync(entities, recipeRepository, ingredientRepository);
             } else {
                 Log.i("Sync", "Full-Sync ist deaktiviert.");
+                Log.d("Sync", "Existierende Daten werden aktualisiert.");
+                processExistsSync(entities, recipeRepository, ingredientRepository);
             }
 
             final List<String> recipeIds = new ArrayList<>();
@@ -78,13 +80,29 @@ public class CookbookSyncService extends IntentService {
     private void sendFinishedMessage() {
         final LocalBroadcastManager locBcMan = LocalBroadcastManager.getInstance(this);
         final Bundle messBundle = new Bundle();
-        messBundle.putString(BROADCAST_SYNC_ACTION_KEY, getResources().getString(R.string.msg_recipes_updated));
+        messBundle.putString(BROADCAST_SYNC_MESSAGE_KEY, getResources().getString(R.string.msg_recipes_updated));
         final Intent returnIntent = new Intent(BROADCAST_SYNC_ACTION);
         returnIntent.putExtras(messBundle);
         locBcMan.sendBroadcast(returnIntent);
     }
 
     private void processFullSync(@NonNull final List<RecipeAbstractEntity> entities,
+                                 @NonNull final RecipeRepository recipeRepository,
+                                 @NonNull final IngredientRepository ingredientRepository) throws IOException {
+
+        for (RecipeAbstractEntity entity : entities) {
+            if(!recipeRepository.isExists(entity.getRecipeId()) ||
+                    recipeRepository.isSyncNecessary(entity.getRecipeId(), entity.getLastUpdate())) {
+                recipeRepository.updateAllDataInDatabase(entity.getRecipeId());
+                ingredientRepository.updateAllDataInDatabase(entity.getRecipeId());
+                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
+            } else {
+                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
+            }
+        }
+    }
+
+    private void processExistsSync(@NonNull final List<RecipeAbstractEntity> entities,
                                  @NonNull final RecipeRepository recipeRepository,
                                  @NonNull final IngredientRepository ingredientRepository) throws IOException {
 

@@ -3,6 +3,8 @@ package android.anderes.org.cookbook.gui;
 import android.anderes.org.cookbook.R;
 import android.anderes.org.cookbook.ServiceLocatorForApp;
 import android.anderes.org.cookbook.database.RecipeAbstractEntity;
+import android.anderes.org.cookbook.receiver.NetworkStatusReceiver;
+import android.anderes.org.cookbook.receiver.SyncReceiver;
 import android.anderes.org.cookbook.repository.Resource;
 import android.anderes.org.cookbook.service.CookbookSyncService;
 import android.arch.lifecycle.Observer;
@@ -13,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import dagger.android.AndroidInjection;
 
+import static android.anderes.org.cookbook.AppConstants.BROADCAST_NETWORK_ACTION;
 import static android.anderes.org.cookbook.AppConstants.BROADCAST_SYNC_ACTION;
 import static android.anderes.org.cookbook.repository.Resource.*;
 
@@ -46,6 +48,7 @@ public class ItemListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private ItemListViewModel viewModel;
+    private NetworkStatusReceiver networkStatusReceiver;
     private final View.OnClickListener syncOnClick =
             view -> {
                 final Intent i = new Intent(this, CookbookSyncService.class);
@@ -66,8 +69,8 @@ public class ItemListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        final FloatingActionButton syncButton = findViewById(R.id.fab);
-        syncButton.setOnClickListener(syncOnClick);
+        onCreateSyncButton();
+
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -79,6 +82,14 @@ public class ItemListActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
         viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeAbstractRepository());
+    }
+
+    private void onCreateSyncButton() {
+        final FloatingActionButton syncButton = findViewById(R.id.fab);
+        syncButton.setOnClickListener(syncOnClick);
+        final boolean isOnline = ServiceLocatorForApp.getInstance().getAppConfiguration().isOnline();
+        syncButton.setAlpha(isOnline ? 1 : 0.5f);
+        syncButton.setEnabled(isOnline);
     }
 
     @Override
@@ -104,12 +115,24 @@ public class ItemListActivity extends AppCompatActivity {
             }
         };
         viewModel.getRecipes().observe(this, observer);
+        registerReceiver();
+    }
+
+    private void registerReceiver() {
+        networkStatusReceiver = new NetworkStatusReceiver(findViewById(R.id.fab));
+        final IntentFilter intentFilter = new IntentFilter(BROADCAST_NETWORK_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(networkStatusReceiver, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         viewModel.getRecipes().removeObservers(this);
+        unregisterReceiver();
+    }
+
+    private void unregisterReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(networkStatusReceiver);
     }
 
     @Override

@@ -107,9 +107,17 @@ public class RecipeRepository {
     /**
      * Überprüft, ob eine Synchronisation anhand des Aktualisierungsdatum
      * notwendig ist. Das Datum wird als long übergeben.
+     * <p>Beachte: Existiert die Rezept-ID in der Datenbank nicht wird false zurück geliefert.</p>
      */
-    public boolean isSyncNecessary(String recipeId, long updateDate) {
-        return !recipeDao.isExists(recipeId) || recipeDao.isSyncNecessary(recipeId, updateDate);
+    public boolean isSyncNecessary(@NonNull final String recipeId, long updateDate) {
+        return  recipeDao.isSyncNecessary(recipeId, updateDate);
+    }
+
+    /**
+     *  Gibt an, ob ein Rezept mit der übergebenen ID existiert.
+     */
+    public boolean isExists(@NonNull final String recipeId) {
+        return recipeDao.isExists(recipeId);
     }
 
     /**

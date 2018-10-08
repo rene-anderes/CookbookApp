@@ -86,8 +86,10 @@ public class RecipeRepositoryTest {
         LiveDataTestUtil.getValue(repository.getRecipe("c0e5582e-252f-4e94-8a49-e12b4b047afc"), 2);
 
         // when
+        boolean isExists = repository.isExists("c0e5582e-252f-4e94-8a49-e12b4b047afb");
         boolean isNecessary = repository.isSyncNecessary("c0e5582e-252f-4e94-8a49-e12b4b047afb", 1515082740753L);
         // then
+        assertThat(isExists, is(true));
         assertThat(isNecessary, is(false));
 
         // when
@@ -96,9 +98,11 @@ public class RecipeRepositoryTest {
         assertThat(isNecessary, is(true));
 
         // when
-        isNecessary = repository.isSyncNecessary("not exits", 1515082740753L);
+        isExists = repository.isExists("not exists");
+        isNecessary = repository.isSyncNecessary("not exists", 1515082740753L);
         // then
-        assertThat(isNecessary, is(true));
+        assertThat(isExists, is(false));
+        assertThat(isNecessary, is(false));
 
     }
 
