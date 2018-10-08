@@ -18,7 +18,11 @@ public class MyApplication extends Application implements HasActivityInjector {
     @Override
     public void onCreate() {
         super.onCreate();
-        ServiceLocatorForApp.getNewInstance(this).getAppConfiguration().loadDefaultValuesForSettings();
+        // sicher stellen, dass es nur eine (singleton) Instanz gibt
+        // und zugleich die Default-Werte der Settings setzen
+        // diese werden nur gesetzt, wenn sie noch nic gesetzt wurden
+        ServiceLocatorForApp.getNewInstance(this)
+                .getAppConfiguration().loadDefaultValuesForSettings();
         DaggerCookbookApplicationComponent.builder().create(this).inject(this);
 
     }
