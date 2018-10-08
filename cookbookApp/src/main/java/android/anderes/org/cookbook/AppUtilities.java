@@ -1,5 +1,9 @@
 package android.anderes.org.cookbook;
 
+import android.anderes.org.cookbook.service.CookbookSyncJobService;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -14,7 +18,7 @@ class AppUtilities implements AppConfiguration {
     private final Context context;
     private final static String PREF_FULL_SYNC = "pref_fullSync";
     private final static String REF_BACKGROUND_SYNC = "pref_backgroundSync";
-    private final static String REF_FIRST_START = "pref_first_start";
+    private static final int SYNC_JOB_ID = 29;
 
     AppUtilities(Context context) {
         this.context = context;
@@ -44,8 +48,27 @@ class AppUtilities implements AppConfiguration {
     }
 
     @Override
-    public boolean loadDefaultValuesForSettings() {
+    public void loadDefaultValuesForSettings() {
         PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
-        return false;
+    }
+
+    @Override
+    public void scheduleJob() {
+        final ComponentName serviceComponent = new ComponentName(context, CookbookSyncJobService.class);
+        final JobInfo.Builder builder = new JobInfo.Builder(SYNC_JOB_ID, serviceComponent);
+        // schedule the start of the service every 10 - 30 seconds
+        builder.setMinimumLatency(1 * 1000); // wait at least
+        builder.setOverrideDeadline(3 * 1000); // maximum delay
+        //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
+        //builder.setRequiresDeviceIdle(true); // device should be idle
+        //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+        final JobScheduler jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(builder.build());
+    }
+
+    @Override
+    public void cancelJob() {
+        final JobScheduler jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.cancel(SYNC_JOB_ID);
     }
 }

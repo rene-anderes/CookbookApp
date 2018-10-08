@@ -47,13 +47,14 @@
                 android:value="android.anderes.org.cookbook.gui.ItemListActivity"/>
         </activity>
 
-        <service android:name=".service.CookbookSyncService" android:exported="false"/>
+        <service android:name=".service.CookbookSyncService" android:enabled="true" android:exported="false"/>
 
         <receiver android:name=".receiver.NetworkChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

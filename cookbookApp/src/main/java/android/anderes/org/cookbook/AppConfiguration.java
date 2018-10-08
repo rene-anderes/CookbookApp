@@ -8,5 +8,9 @@ public interface AppConfiguration {
 
     boolean isBackgroundSync();
 
-    boolean loadDefaultValuesForSettings();
+    void loadDefaultValuesForSettings();
+
+    void scheduleJob();
+
+    void cancelJob();
 }
