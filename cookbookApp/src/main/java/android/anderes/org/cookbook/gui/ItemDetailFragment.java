@@ -125,8 +125,12 @@ public class ItemDetailFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.noOfPerson)).setText(noOfPerson);
         final Spanned preparation = Html.fromHtml(recipe.getPreparation());
         ((TextView) rootView.findViewById(R.id.preparation)).setText(preparation);
-        final String updateDate = String.format("%tc", new Date(recipe.getEditingDate()));
-        ((TextView) rootView.findViewById(R.id.update)).setText(updateDate);
+        final String updateDate = String.format(" %1$tF %1$tT", new Date(recipe.getEditingDate()));
+        final String updateText = getResources().getString(R.string.item_detail_lastUpdate, updateDate);
+        ((TextView) rootView.findViewById(R.id.update)).setText(updateText);
+        final String addingDate = String.format(" %1$tF %1$tT", new Date(recipe.getAddingDate()));
+        final String addingText = getResources().getString(R.string.item_detail_adding, addingDate);
+        ((TextView) rootView.findViewById(R.id.adding)).setText(addingText);
         final RatingBar ratingBar = rootView.findViewById(R.id.rating);
         ratingBar.setRating(recipe.getRating());
     }
