@@ -39,12 +39,14 @@
 
     <TextView
         android:id="@+id/about_copyright_id"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/about_copyright" />
 
     <TextView
         android:id="@+id/about_anderes_id"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autoLink="web"
@@ -57,8 +59,38 @@
 
     <TextView
         android:id="@+id/about_version"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="version" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
+        android:id="@+id/source_code_decr"
+        style="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:text="@string/about_source_decription" />
+
+    <TextView
+        android:id="@+id/source_code"
+        style="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:paddingBottom="4dp"
+        android:text="@string/about_source" />
+
+    <TextView
+        android:id="@+id/licence"
+        style="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/about_Licence" />
 
 </LinearLayout>
