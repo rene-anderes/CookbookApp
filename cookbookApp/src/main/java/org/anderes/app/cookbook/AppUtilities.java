@@ -57,10 +57,10 @@ class AppUtilities implements AppConfiguration {
     public void scheduleJob() {
         final ComponentName serviceComponent = new ComponentName(context, CookbookSyncJobService.class);
         final JobInfo.Builder builder = new JobInfo.Builder(SYNC_JOB_ID, serviceComponent);
-        builder.setPeriodic(10 * 1000) // every 10 seconds
+        builder.setPeriodic(24 * 60 * 60 * 1000) // einmal im Tag
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
-        //builder.setRequiresDeviceIdle(true); // device should be idle
-        //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+                //.setRequiresDeviceIdle(true); // device should be idle
+                //.setRequiresCharging(false); // we don't care if the device is charging or not
         final JobScheduler jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
         for (JobInfo info : jobScheduler.getAllPendingJobs()) {
