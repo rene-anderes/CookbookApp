@@ -27,7 +27,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="android.anderes.org.cookbook.gui.ItemListActivity"
+        tools:context="android.anderes.org.cookbook.org.anderes.org.cookbook.gui.ItemListActivity"
         tools:listitem="@layout/item_list_content" />
 
     <FrameLayout
