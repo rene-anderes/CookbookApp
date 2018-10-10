@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.anderes.app.cookbook.AppConstants.BROADCAST_SYNC_ACTION;
 import static org.anderes.app.cookbook.AppConstants.BROADCAST_SYNC_MESSAGE_KEY;
+import static org.anderes.app.cookbook.AppConstants.LOG_TAG_SYNC;
 
 public class CookbookSyncService extends IntentService {
 
@@ -38,10 +39,10 @@ public class CookbookSyncService extends IntentService {
                 ServiceLocatorForApp.getInstance().getIngredientRepository();
         final AppConfiguration config = ServiceLocatorForApp.getInstance().getAppConfiguration();
         if (config.isOnline()) {
-            Log.d("Sync", "Internet-Verbindung vorhanden.");
+            Log.d(LOG_TAG_SYNC, "Internet-Verbindung vorhanden.");
             doIt(recipeAbstractRepository, recipeRepository, ingredientRepository, config);
         } else {
-            Log.i("Sync", "Keine Internet-Verbindung.");
+            Log.i(LOG_TAG_SYNC, "Keine Internet-Verbindung.");
         }
     }
 
@@ -50,16 +51,16 @@ public class CookbookSyncService extends IntentService {
                       @NonNull final IngredientRepository ingredientRepository,
                       @NonNull final AppConfiguration configuration) {
 
-        Log.i("Sync", "Sync gestartet ...");
+        Log.i(LOG_TAG_SYNC, "Sync gestartet ...");
         try {
             final List<RecipeAbstractEntity> entities = recipeAbstractRepository.getRecipeCollectionFromRemote();
             recipeAbstractRepository.updateAllDataInDatabase(entities);
             if(configuration.isFullSync()) {
-                Log.i("Sync", "Full-Sync ist aktiviert.");
+                Log.i(LOG_TAG_SYNC, "Full-Sync ist aktiviert.");
                 processFullSync(entities, recipeRepository, ingredientRepository);
             } else {
-                Log.i("Sync", "Full-Sync ist deaktiviert.");
-                Log.d("Sync", "Existierende Daten werden aktualisiert.");
+                Log.i(LOG_TAG_SYNC, "Full-Sync ist deaktiviert.");
+                Log.d(LOG_TAG_SYNC, "Existierende Daten werden aktualisiert.");
                 processExistsSync(entities, recipeRepository, ingredientRepository);
             }
 
@@ -69,12 +70,12 @@ public class CookbookSyncService extends IntentService {
             }
             recipeRepository.deleteOrphan(recipeIds);
             ingredientRepository.deleteOrphan(recipeIds);
-            Log.d("Sync", "Verwaiste Einträge konsolidiert.");
+            Log.d(LOG_TAG_SYNC, "Verwaiste Einträge konsolidiert.");
         } catch (Exception e) {
-            Log.e("Sync", "Sync Error: " + e.getMessage());
+            Log.e(LOG_TAG_SYNC, "Sync Error: " + e.getMessage());
         }
         sendFinishedMessage();
-        Log.i("Sync", "Sync beendet.");
+        Log.i(LOG_TAG_SYNC, "Sync beendet.");
     }
 
     private void sendFinishedMessage() {
@@ -95,9 +96,9 @@ public class CookbookSyncService extends IntentService {
                     recipeRepository.isSyncNecessary(entity.getRecipeId(), entity.getLastUpdate())) {
                 recipeRepository.updateAllDataInDatabase(entity.getRecipeId());
                 ingredientRepository.updateAllDataInDatabase(entity.getRecipeId());
-                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
+                Log.d(LOG_TAG_SYNC, "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
             } else {
-                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
+                Log.d(LOG_TAG_SYNC, "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
             }
         }
     }
@@ -110,9 +111,9 @@ public class CookbookSyncService extends IntentService {
             if(recipeRepository.isSyncNecessary(entity.getRecipeId(), entity.getLastUpdate())) {
                 recipeRepository.updateAllDataInDatabase(entity.getRecipeId());
                 ingredientRepository.updateAllDataInDatabase(entity.getRecipeId());
-                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
+                Log.d(LOG_TAG_SYNC, "Rezept-Id: " + entity.getRecipeId() + " - Daten aktualisiert.");
             } else {
-                Log.d("Sync", "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
+                Log.d(LOG_TAG_SYNC, "Rezept-Id: " + entity.getRecipeId() + " - Daten aktuell.");
             }
         }
     }
