@@ -21,7 +21,6 @@ public class ServiceLocatorForApp implements ServiceLocator {
     private CookbookDatabase database;
     private final Context context;
     private Retrofit retrofit;
-    private static ServiceLocator instance;
     private final static String BASE_URL = "http://www.anderes.org/";
 
     ServiceLocatorForApp(final Context context) {
