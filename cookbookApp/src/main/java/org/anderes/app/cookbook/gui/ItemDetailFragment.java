@@ -1,7 +1,7 @@
 package org.anderes.app.cookbook.gui;
 
 import org.anderes.app.cookbook.R;
-import org.anderes.app.cookbook.ServiceLocatorForApp;
+import org.anderes.app.cookbook.ServiceLocatorProvider;
 import org.anderes.app.cookbook.database.RecipeEntity;
 import org.anderes.app.cookbook.repository.Resource;
 import android.app.Activity;
@@ -79,7 +79,7 @@ public class ItemDetailFragment extends Fragment {
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID) && activity != null) {
             final String itemId = getArguments().getString(ARG_ITEM_ID);
             ItemDetailViewModel viewModel = ViewModelProviders.of(this).get(ItemDetailViewModel.class);
-            viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeRepository());
+            viewModel.setRepository(ServiceLocatorProvider.getInstance().getRecipeRepository());
 
 
             final CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);

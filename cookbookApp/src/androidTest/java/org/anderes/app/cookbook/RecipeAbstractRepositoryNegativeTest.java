@@ -48,7 +48,7 @@ public class RecipeAbstractRepositoryNegativeTest {
         }
         final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
-        final ServiceLocator serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        final ServiceLocator serviceLocator = ServiceLocatorProvider.createServiceLocator(new ServiceLocatorForTest(context, baseUrl.toString()));
         repository = new RecipeAbstractRepository(serviceLocator.getRecipeService(), serviceLocator.getRecipeAbstractDao());
 
     }

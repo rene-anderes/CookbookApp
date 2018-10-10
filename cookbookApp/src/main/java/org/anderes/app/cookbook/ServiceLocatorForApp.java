@@ -24,21 +24,10 @@ public class ServiceLocatorForApp implements ServiceLocator {
     private static ServiceLocator instance;
     private final static String BASE_URL = "http://www.anderes.org/";
 
-    static ServiceLocator getNewInstance(final Context context) {
-        synchronized (ServiceLocatorForApp.class) {
-            instance = new ServiceLocatorForApp(context, BASE_URL);
-        }
-        return instance;
-    }
-
-    public static @NonNull ServiceLocator getInstance() {
-        return instance;
-    }
-
-    private ServiceLocatorForApp(final Context context, final String baseHttpUrl) {
+    ServiceLocatorForApp(final Context context) {
         this.context = context;
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseHttpUrl)
+                .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

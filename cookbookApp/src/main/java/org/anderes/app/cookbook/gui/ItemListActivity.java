@@ -2,6 +2,7 @@ package org.anderes.app.cookbook.gui;
 
 import org.anderes.app.cookbook.R;
 import org.anderes.app.cookbook.ServiceLocatorForApp;
+import org.anderes.app.cookbook.ServiceLocatorProvider;
 import org.anderes.app.cookbook.database.RecipeAbstractEntity;
 import org.anderes.app.cookbook.receiver.NetworkStatusReceiver;
 import org.anderes.app.cookbook.receiver.SyncReceiver;
@@ -80,13 +81,13 @@ public class ItemListActivity extends AppCompatActivity {
         }
 
         viewModel = ViewModelProviders.of(this).get(ItemListViewModel.class);
-        viewModel.setRepository(ServiceLocatorForApp.getInstance().getRecipeAbstractRepository());
+        viewModel.setRepository(ServiceLocatorProvider.getInstance().getRecipeAbstractRepository());
     }
 
     private void onCreateSyncButton() {
         final FloatingActionButton syncButton = findViewById(R.id.fab);
         syncButton.setOnClickListener(syncOnClick);
-        final boolean isOnline = ServiceLocatorForApp.getInstance().getAppConfiguration().isOnline();
+        final boolean isOnline = ServiceLocatorProvider.getInstance().getAppConfiguration().isOnline();
         syncButton.setAlpha(isOnline ? 1 : 0.5f);
         syncButton.setEnabled(isOnline);
     }

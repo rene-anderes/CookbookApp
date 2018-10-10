@@ -2,7 +2,8 @@ package org.anderes.app.cookbook.service;
 
 import org.anderes.app.cookbook.AppConfiguration;
 import org.anderes.app.cookbook.R;
-import org.anderes.app.cookbook.ServiceLocatorForApp;
+import org.anderes.app.cookbook.ServiceLocator;
+import org.anderes.app.cookbook.ServiceLocatorProvider;
 import org.anderes.app.cookbook.database.RecipeAbstractEntity;
 import org.anderes.app.cookbook.repository.IngredientRepository;
 import org.anderes.app.cookbook.repository.RecipeAbstractRepository;
@@ -31,13 +32,12 @@ public class CookbookSyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        final RecipeAbstractRepository recipeAbstractRepository =
-                ServiceLocatorForApp.getInstance().getRecipeAbstractRepository();
-        final RecipeRepository recipeRepository =
-                ServiceLocatorForApp.getInstance().getRecipeRepository();
-        final IngredientRepository ingredientRepository =
-                ServiceLocatorForApp.getInstance().getIngredientRepository();
-        final AppConfiguration config = ServiceLocatorForApp.getInstance().getAppConfiguration();
+        final ServiceLocator serviceLocator = ServiceLocatorProvider.getInstance();
+        final RecipeAbstractRepository recipeAbstractRepository = serviceLocator.getRecipeAbstractRepository();
+        final RecipeRepository recipeRepository = serviceLocator.getRecipeRepository();
+        final IngredientRepository ingredientRepository = serviceLocator.getIngredientRepository();
+        final AppConfiguration config = serviceLocator.getAppConfiguration();
+
         if (config.isOnline()) {
             Log.d(LOG_TAG_SYNC, "Internet-Verbindung vorhanden.");
             doIt(recipeAbstractRepository, recipeRepository, ingredientRepository, config);

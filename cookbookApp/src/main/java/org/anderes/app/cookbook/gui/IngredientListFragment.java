@@ -1,8 +1,5 @@
 package org.anderes.app.cookbook.gui;
 
-import org.anderes.app.cookbook.R;
-import org.anderes.app.cookbook.ServiceLocatorForApp;
-import org.anderes.app.cookbook.repository.Resource;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import org.anderes.app.cookbook.R;
+import org.anderes.app.cookbook.ServiceLocatorProvider;
+import org.anderes.app.cookbook.repository.Resource;
 
 public class IngredientListFragment extends Fragment {
 
@@ -29,7 +30,7 @@ public class IngredientListFragment extends Fragment {
             final String itemId = getArguments().getString(ARG_ITEM_ID);
             final IngredientListViewModel viewModel =
                     ViewModelProviders.of(this).get(IngredientListViewModel.class);
-            viewModel.setRepository(ServiceLocatorForApp.getInstance().getIngredientRepository());
+            viewModel.setRepository(ServiceLocatorProvider.getInstance().getIngredientRepository());
 
             viewModel.getIngredients(itemId).observe(this, resource -> {
                 if (resource != null && resource.status == Resource.Status.SUCCESS) {

@@ -1,12 +1,12 @@
 package org.anderes.app.cookbook;
 
-import org.anderes.app.cookbook.database.IngredientEntity;
-import org.anderes.app.cookbook.repository.IngredientRepository;
-import org.anderes.app.cookbook.repository.Resource;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
+import org.anderes.app.cookbook.database.IngredientEntity;
+import org.anderes.app.cookbook.repository.IngredientRepository;
+import org.anderes.app.cookbook.repository.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +20,6 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.fail;
@@ -47,7 +46,7 @@ public class IngredientRepositoryTest {
         }
         final HttpUrl baseUrl = server.url("/");
         final Context context = InstrumentationRegistry.getTargetContext();
-        final ServiceLocator serviceLocator = new ServiceLocatorForTest(context, baseUrl.toString());
+        final ServiceLocator serviceLocator = ServiceLocatorProvider.createServiceLocator(new ServiceLocatorForTest(context, baseUrl.toString()));
         repository = new IngredientRepository(serviceLocator.getRecipeService(), serviceLocator.getIngredientDao());
     }
 

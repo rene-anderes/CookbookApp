@@ -1,7 +1,7 @@
 package org.anderes.app.cookbook.gui;
 
-import org.anderes.app.cookbook.JobScheduleUtil;
-import org.anderes.app.cookbook.ServiceLocatorForApp;
+import org.anderes.app.cookbook.ServiceLocatorProvider;
+
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,9 +28,9 @@ public class SettingsActivity extends AppCompatActivity {
                             final Boolean backgroundSync = sharedPrefs.getBoolean("pref_backgroundSync", FALSE);
                             Log.d(LOG_TAG_SYNC, "SharedPreferences - Key: pref_backgroundSync - Result: " + backgroundSync);
                             if (backgroundSync) {
-                                ServiceLocatorForApp.getInstance().getAppConfiguration().scheduleJob();
+                                ServiceLocatorProvider.getInstance().getAppConfiguration().scheduleJob();
                             } else {
-                                ServiceLocatorForApp.getInstance().getAppConfiguration().cancelJob();
+                                ServiceLocatorProvider.getInstance().getAppConfiguration().cancelJob();
                             }
                         }
                     };
