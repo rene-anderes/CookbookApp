@@ -41,7 +41,7 @@ public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAd
 
         String description = current.getDescription();
         if (current.getComment() != null && !current.getComment().isEmpty()) {
-            description += '\n' + current.getComment();
+            description += " " + current.getComment();
         }
 
         itemViewHolder.ingredientDescription.setText(description);

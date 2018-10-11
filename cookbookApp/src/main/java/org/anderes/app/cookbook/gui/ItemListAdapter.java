@@ -13,8 +13,11 @@ import android.widget.TextView;
 import org.anderes.app.cookbook.R;
 import org.anderes.app.cookbook.database.RecipeAbstractEntity;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import static java.util.Locale.GERMAN;
 import static org.anderes.app.cookbook.R.layout.item_list_content;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder>  {
@@ -63,12 +66,14 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     public void onBindViewHolder(@NonNull ItemViewHolder itemViewHolder, int position) {
         if (recipes != null && !recipes.isEmpty()) {
             RecipeAbstractEntity current = recipes.get(position);
-            itemViewHolder.recipeItemView.setText(current.getTitle());
+            itemViewHolder.recipeTitle.setText(current.getTitle());
+            final String updateDate = String.format(GERMAN," %1$td.%1$tm.%1$ty %1$tT", new Date(current.getLastUpdate()));
+            itemViewHolder.recipeUpdate.setText(updateDate);
             itemViewHolder.itemView.setTag(recipes.get(position));
             itemViewHolder.itemView.setOnClickListener(mOnClickListener);
         } else {
             // Covers the case of data not being ready yet.
-            itemViewHolder.recipeItemView.setText("No Recipes");
+            itemViewHolder.recipeTitle.setText("No Recipes");
         }
     }
 
@@ -86,11 +91,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     }
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private final TextView recipeItemView;
+        private final TextView recipeTitle;
+        private final TextView recipeUpdate;
 
         ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            recipeItemView = itemView.findViewById(R.id.item_title);
+            recipeTitle = itemView.findViewById(R.id.list_item_title_id);
+            recipeUpdate = itemView.findViewById(R.id.list_update_id);
         }
     }
 }
