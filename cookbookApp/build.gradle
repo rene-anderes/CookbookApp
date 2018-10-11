@@ -6,8 +6,8 @@ android {
         applicationId "org.anderes.app.cookbook"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.1.0"
+        versionCode 4
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
