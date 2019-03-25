@@ -22,7 +22,7 @@
     <string name="menu_action_settings">Einstellungen</string>
     <string name="menu_action_about">Über diese App</string>
     <string name="about_anderes_link">http://www.anderes.org</string>
-    <string name="about_copyright">copyright 2018 René Anderes</string>
+    <string name="about_copyright">copyright 2019 René Anderes</string>
     <string name="about_version">Version: %s</string>
     <string name="about_Licence">MIT-Lizenz</string>
     <string name="about_source_decription">Source-Code</string>
